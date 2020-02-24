@@ -13,7 +13,8 @@
 
 .classpath
 .project
-
+.DS_Store
+src/.DS_Store
 
 # Package Files #
 *.jar
