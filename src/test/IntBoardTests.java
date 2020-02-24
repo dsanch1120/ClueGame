@@ -1,3 +1,6 @@
+/*
+ * Authors Daniel Sanchez and Trent Douglas
+ */
 package test;
 
 import experiment.*;
@@ -20,10 +23,9 @@ public class IntBoardTests {
 	
 	
 	@Test
-	public void topLeft() {
+	public void topLeft() {											//test calcAdjacencies for board index (0,0)
 		BoardCell cell = board.getCell(0,0);
 		Set<BoardCell> testList = board.getAdjList(cell);
-		//System.out.println(board.getAdjList(cell));
 		assertTrue(testList.contains(board.getCell(1, 0)));
 		assertTrue(testList.contains(board.getCell(0, 1)));
 		assertEquals(2, testList.size());
@@ -32,7 +34,7 @@ public class IntBoardTests {
 	
 	@Test
 	public void bottomRight() {
-		BoardCell cell = board.getCell(3,3);
+		BoardCell cell = board.getCell(3,3);						//test calcAdjacencies for board index (3,3)
 		Set<BoardCell> testList = board.getAdjList(cell);
 		assertTrue(testList.contains(board.getCell(2, 3)));
 		assertTrue(testList.contains(board.getCell(3, 2)));
@@ -42,7 +44,7 @@ public class IntBoardTests {
 	
 	@Test
 	public void rightEdge() {
-		BoardCell cell = board.getCell(1,3);
+		BoardCell cell = board.getCell(1,3);						//test calcAdjacencies for board index (1,3)
 		Set<BoardCell> testList = board.getAdjList(cell);
 		assertTrue(testList.contains(board.getCell(0, 3)));
 		assertTrue(testList.contains(board.getCell(2, 3)));
@@ -52,7 +54,7 @@ public class IntBoardTests {
 	
 	@Test
 	public void leftEdge() {
-		BoardCell cell = board.getCell(2,0);
+		BoardCell cell = board.getCell(2,0);						//test calcAdjacencies for board index (2,0)
 		Set<BoardCell> testList = board.getAdjList(cell);
 		assertTrue(testList.contains(board.getCell(1, 0)));
 		assertTrue(testList.contains(board.getCell(2, 1)));
@@ -62,7 +64,7 @@ public class IntBoardTests {
 	
 	@Test
 	public void secondMiddle() {
-		BoardCell cell = board.getCell(1, 1);
+		BoardCell cell = board.getCell(1, 1);						//test calcAdjacencies for board index (1,1)
 		Set<BoardCell> testList = board.getAdjList(cell);
 		assertTrue(testList.contains(board.getCell(1, 0)));
 		assertTrue(testList.contains(board.getCell(1, 2)));
@@ -73,7 +75,7 @@ public class IntBoardTests {
 	
 	@Test
 	public void secondLastMiddle() {
-		BoardCell cell = board.getCell(2, 2);
+		BoardCell cell = board.getCell(2, 2);						//test calcAdjacencies for board index (2,2)
 		Set<BoardCell> testList = board.getAdjList(cell);
 		assertTrue(testList.contains(board.getCell(2, 1)));
 		assertTrue(testList.contains(board.getCell(2, 3)));
@@ -84,7 +86,7 @@ public class IntBoardTests {
 	
 	@Test
 	public void targets0_0() {
-		BoardCell cell = board.getCell(0, 0);
+		BoardCell cell = board.getCell(0, 0);						//test calcTargets for board index (0,0) and die roll of 3
 		board.calcTargets(cell, 3);
 		Set targets = board.getTargets();
 		assertEquals(6, targets.size());
@@ -98,7 +100,7 @@ public class IntBoardTests {
 	
 	@Test
 	public void targets3_3() {
-		BoardCell cell = board.getCell(3, 3);
+		BoardCell cell = board.getCell(3, 3);						//test calcTargets for board index (3,3) and die roll of 3
 		board.calcTargets(cell, 3);
 		Set targets = board.getTargets();
 		assertEquals(6, targets.size());
@@ -111,7 +113,7 @@ public class IntBoardTests {
 	}
 	
 	@Test
-	public void targets0_3() {
+	public void targets0_3() {										//test calcTargets for board index (0,3) and die roll of 3
 		BoardCell cell = board.getCell(0, 3);
 		board.calcTargets(cell, 3);
 		Set targets = board.getTargets();
@@ -126,7 +128,7 @@ public class IntBoardTests {
 	}
 	
 	@Test
-	public void targets3_0() {
+	public void targets3_0() {										//test calcTargets for board index (3,0) and die roll of 3
 		BoardCell cell = board.getCell(3, 0);
 		board.calcTargets(cell, 3);
 		Set targets = board.getTargets();
@@ -140,7 +142,7 @@ public class IntBoardTests {
 	}
 	
 	@Test
-	public void targets0_1() {
+	public void targets0_1() {										//test calcTargets for board index (0,1) and die roll of 2
 		BoardCell cell = board.getCell(0, 1);
 		board.calcTargets(cell, 2);
 		Set targets = board.getTargets();
@@ -152,7 +154,7 @@ public class IntBoardTests {
 	}
 	
 	@Test
-	public void targets1_3() {
+	public void targets1_3() {										//test calcTargets for board index (1,3) and die roll of 2
 		BoardCell cell = board.getCell(1, 3);
 		board.calcTargets(cell, 2);
 		Set targets = board.getTargets();

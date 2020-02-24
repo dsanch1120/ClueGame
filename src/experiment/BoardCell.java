@@ -1,15 +1,16 @@
+/*
+ * Authors Daniel Sanchez and Trent Douglas
+ */
 package experiment;
 
 public class BoardCell {
 	private int row;
 	private int column;
-	private int num;
 	
 	public BoardCell(int row, int column) {
 		super();
 		this.row = row;
-		this.column = column;
-		this.num = num;
+		this.column = column;					//default constructor sets row and column to parameters
 	}
 
 	public int getRow() {
@@ -27,9 +28,5 @@ public class BoardCell {
 	public void setColumn(int column) {
 		this.column = column;
 	}
-	public int getNum() {
-		return num;
-	}
-	
 	
 }

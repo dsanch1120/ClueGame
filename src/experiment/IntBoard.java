@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class IntBoard {
-	BoardCell[][] gridList;
+	BoardCell[][] gridList;													//declare instance variables:
 
 	private Set<BoardCell> visited = new HashSet<BoardCell>();
 	private Set<BoardCell> targets = new HashSet<BoardCell>();
@@ -19,7 +19,7 @@ public class IntBoard {
 	public static final int NUM_COLS = 4;
 
 
-	public IntBoard() {
+	public IntBoard() {														//default constructor creates new 2 dimensional of BoardCell objects and calculates adjacencies
 		super();
 		this.gridList = new BoardCell[NUM_ROWS][NUM_COLS];
 		this.adjMtx = new HashMap<BoardCell, Set<BoardCell>>();
@@ -32,42 +32,33 @@ public class IntBoard {
 		this.calcAdjacencies();
 	}
 
-	public void calcAdjacencies() {
+	public void calcAdjacencies() {											//caldAdjacencies iterates through each board cell and checks if the adjacent cells are on the board and if so it adds them to the adjacencies set for that board cell
 		for (int i = 0; i < NUM_COLS; ++i) {
 			for (int j = 0; j < NUM_ROWS; ++j) {
 				Set<BoardCell> tempSet = new HashSet<BoardCell>();
-
-
-				System.out.println("tile: " + gridList[i][j].getRow() + " , " + gridList[i][j].getColumn());
 				if (i+1 < NUM_ROWS) {
 					tempSet.add(gridList[i + 1][j]);
-					System.out.println(gridList[i + 1][j].getRow() + " , " + gridList[i + 1][j].getColumn());
 				}
 				if (i-1 >= 0) {
 					tempSet.add(gridList[i - 1][j]);
-					System.out.println(gridList[i - 1][j].getRow() + " , " + gridList[i - 1][j].getColumn());
 				}
 				if (j+1 < NUM_COLS) {
 					tempSet.add(gridList[i][j + 1]);
-					System.out.println(gridList[i][j + 1].getRow() + " , " + gridList[i][j + 1].getColumn());
 				}
 				if (j-1 >= 0) {
 					tempSet.add(gridList[i][j - 1]);
-					System.out.println(gridList[i][j - 1].getRow() + " , " + gridList[i][j - 1].getColumn());
 				}
 
-				//System.out.println(tempSet);
-				System.out.println();
 				adjMtx.put(gridList[i][j], tempSet);
 			}
 		}
 	}
 
-	public Set<BoardCell> getAdjList(BoardCell cell){
+	public Set<BoardCell> getAdjList(BoardCell cell){						//returns the adjacencies for a specified cell
 		return adjMtx.get(cell);
 	}
 
-	public void calcTargets(BoardCell startCell, int pathLength) {
+	public void calcTargets(BoardCell startCell, int pathLength) {			//recursively traverses each possible path given the starting cell and the path length
 
 		visited.add(startCell);
 		for (BoardCell i :  getAdjList(startCell)) {
@@ -84,23 +75,23 @@ public class IntBoard {
 		}
 	}
 
-	public Set<BoardCell> getTargets(){
+	public Set<BoardCell> getTargets(){										//returns the possible targets calculated in calcTargets
 		return targets;
 	}
 
-	public BoardCell getCell(int row, int col) {
+	public BoardCell getCell(int row, int col) {							//returns the BoardCell object given the row and column it is on
 		return gridList[row][col];
 	}
 
 
 
-	public static void main(String[] args) {
+	public static void main(String[] args) {								//this main method is simply used for testing purposes 
 		IntBoard testBoard = new IntBoard();
 
 
 		for (int i = 0; i < NUM_COLS; ++i) {
 			for (int j = 0; j < NUM_ROWS; ++j) {
-				System.out.print(testBoard.gridList[i][j].getRow() + "," + (testBoard.gridList[i][j].getColumn()) + " ");
+				//System.out.print(testBoard.gridList[i][j].getRow() + "," + (testBoard.gridList[i][j].getColumn()) + " ");
 				if(j == 3) System.out.println();
 			}
 		}
