@@ -1,7 +1,7 @@
 /*
  * Authors Daniel Sanchez and Trent Douglas
  */
-package test;
+package tests;
 
 import experiment.*;
 
