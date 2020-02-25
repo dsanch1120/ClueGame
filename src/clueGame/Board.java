@@ -1,3 +1,7 @@
+/*
+ * Created by Daniel Sanchez and Trent Douglas
+ */
+
 package clueGame;
 
 import java.util.Map;

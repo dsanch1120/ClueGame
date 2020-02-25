@@ -10,11 +10,12 @@
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
-
+gitlog.txt
 .classpath
 .project
 .DS_Store
 src/.DS_Store
+OurTests.txt
 
 # Package Files #
 *.jar
