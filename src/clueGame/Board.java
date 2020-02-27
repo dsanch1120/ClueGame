@@ -33,19 +33,107 @@ public class Board {
 	}
 
 	public static void main(String args[]) throws FileNotFoundException {
-		
+		Board test = new Board();
+		test.setConfigFiles("data/layout.csv", "data/rooms.txt");
+		test.loadRoomConfig();
+		test.loadBoardConfig();
+
 	}
 
 	public void loadRoomConfig() throws FileNotFoundException {
-		
+		File file = new File(roomConfigFile);
+		legend = new HashMap<Character, String>();
+		Scanner sc = new Scanner(file);
+		String line = "";
+		Character room; String rName;
+		while(sc.hasNextLine()) {
+			line = sc.nextLine();
+			room = line.charAt(0);
+			rName = line.substring(3, line.lastIndexOf(','));
+			legend.put(room, rName);
+		}
 	}
 
 	public void loadBoardConfig() throws FileNotFoundException {
 
+		File file = new File(boardConfigFile);
+		Scanner sc = new Scanner(file);
+		String line = "";
+		int counter1 = 1;
+		int counter2 = 0; 
+		
+		line = sc.nextLine();
+		
+		for (int i = 0; i < line.length(); ++i) {
+			if (line.charAt(i) == ',') {
+				counter2++;
+			}
+		}
+		counter2++;
+
+		this.numColumns = counter2;
+		
+		while(sc.hasNextLine()) {
+			String l = sc.nextLine();
+			counter1++;
+		}
+		
+		this.numRows = counter1;
+		
+		System.out.println(this.numColumns + " " + this.numRows);
+		
+		sc = new Scanner(file);
+
+		theInstance.board = new BoardCell[numRows][numColumns];
+
+		counter1 = 0; 
+		while(sc.hasNextLine()) {
+			line = sc.nextLine();
+			int counter3 = 0;
+
+			for (int i = 0; i < line.length(); ++i) {
+				if(line.charAt(i) == ',') {
+					continue;
+				}
+				if((i != line.length() - 1) && (line.charAt(i + 1) != ',' && !(line.charAt(i + 1) == '\n'))) {
+					theInstance.board[counter1][counter3] = new BoardCell(counter3, counter1, line.charAt(i));
+					theInstance.board[counter1][counter3].setDoorDirection(line.charAt(i + 1));
+					System.out.println(theInstance.board[counter1][counter3].getRow() + " " + theInstance.board[counter1][counter3].getColumn() + " " + theInstance.board[counter1][counter3].getInitial() + "" + line.charAt(i+1));
+					counter3++;
+					i++;
+					continue;
+				}
+				theInstance.board[counter1][counter3] = new BoardCell(counter3, counter1, line.charAt(i));
+				theInstance.board[counter1][counter3].setDoorDirection('N');
+				System.out.println(theInstance.board[counter1][counter3].getRow() + " " + theInstance.board[counter1][counter3].getColumn() + " " + theInstance.board[counter1][counter3].getInitial());
+				counter3++;
+
+			}
+			counter1++;
+		}
 	}
 
 	public void calcAdjacencies() {
 		
+		for (int i = 0; i < numColumns; i++) {
+			for (int j = 0; j < numRows; j++) {
+				Set<BoardCell> tempSet = new HashSet<BoardCell>();
+				if(i+1 < numRows) {
+					tempSet.add(theInstance.board[i+1][j]);
+				}
+				if(i-1 >= 0) {
+					tempSet.add(theInstance.board[i-1][j]);
+				}
+				if(j+1 < numColumns) {
+					tempSet.add(theInstance.board[i][j+1]);
+				}
+				if(j-1 >= 0) {
+					tempSet.add(theInstance.board[i][j-1]);
+				}
+				adjMatrix.put(theInstance.board[i][j], tempSet);
+					
+			}
+		}
 		
 	}
 
