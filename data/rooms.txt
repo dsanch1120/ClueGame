@@ -9,4 +9,3 @@ D, Dining room, Card
 O, Lounge, Card
 X, Closet, Other
 W, Walkway, Other
-

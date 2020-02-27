@@ -7,6 +7,7 @@ public class BoardCell {
 	private int row;
 	private int column;
 	private char initial;
+	private DoorDirection door;
 	
 	public char getInitial() {
 		return initial;
@@ -53,6 +54,24 @@ public class BoardCell {
 	//FIXME
 	public boolean isDoorway() {
 		return false;
+	}
+	
+	public void setDoorDirection(char d) {
+		if (d == 'D') {
+			door = DoorDirection.DOWN;
+		}
+		if (d == 'U') {
+			door = DoorDirection.UP;
+		}
+		if (d == 'L') {
+			door = DoorDirection.LEFT;
+		}
+		if (d == 'R') {
+			door = DoorDirection.RIGHT;
+		}
+		if (d == 'N') {
+			door = DoorDirection.NONE;
+		}
 	}
 	
 	public DoorDirection getDoorDirection() {
