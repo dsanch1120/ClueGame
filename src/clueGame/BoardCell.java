@@ -23,6 +23,7 @@ public class BoardCell {
 		this.row = row;
 		this.column = column;					//default constructor sets row and column to parameters
 		this.initial = initial;
+		door = DoorDirection.NONE;
 	}
 
 	public int getRow() {
@@ -43,39 +44,47 @@ public class BoardCell {
 	
 	//FIXME
 	public boolean isWalkway() {
-		return false;
+		if(this.initial == 'W') {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	//FIXME
 	public boolean isRoom() {
-		return false;
+		if(this.initial != 'X' && this.initial != 'W') {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
-	//FIXME
 	public boolean isDoorway() {
-		return false;
+		if(this.getDoorDirection() != DoorDirection.NONE) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	public void setDoorDirection(char d) {
 		if (d == 'D') {
-			door = DoorDirection.DOWN;
+			this.door = DoorDirection.DOWN;
 		}
 		if (d == 'U') {
-			door = DoorDirection.UP;
+			this.door = DoorDirection.UP;
 		}
 		if (d == 'L') {
-			door = DoorDirection.LEFT;
+			this.door = DoorDirection.LEFT;
 		}
 		if (d == 'R') {
-			door = DoorDirection.RIGHT;
-		}
-		if (d == 'N') {
-			door = DoorDirection.NONE;
+			this.door = DoorDirection.RIGHT;
 		}
 	}
 	
 	public DoorDirection getDoorDirection() {
-		return DoorDirection.NONE;
+		return door;
 	}
 	
 }

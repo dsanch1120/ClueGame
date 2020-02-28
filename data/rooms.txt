@@ -6,6 +6,6 @@ G, Guest room, Card
 N, Nursery, Card
 S, Study, Card
 D, Dining room, Card
-O, Lounge, Card
+L, Lounge, Card
 X, Closet, Other
 W, Walkway, Other
