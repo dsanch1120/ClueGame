@@ -32,6 +32,7 @@ public class Board {
 		try {
 			theInstance.loadRoomConfig();
 			theInstance.loadBoardConfig();
+			theInstance.calcAdjacencies();
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -147,8 +148,8 @@ public class Board {
 
 	}
 
-	public void calcTargets(BoardCell cell, int pathLength) {
-
+	public void calcTargets(int row, int column, int pathLength) {
+			
 	}
 
 
@@ -239,6 +240,10 @@ public class Board {
 
 	public static void setTheInstance(Board theInstance) {
 		Board.theInstance = theInstance;
+	}
+	
+	public Set<BoardCell> getAdjList(int row, int column){
+		return adjMatrix.get(board[row][column]);
 	}
 
 }
