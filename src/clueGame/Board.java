@@ -26,6 +26,7 @@ public class Board {
 	private String roomConfigFile;
 	private static Board theInstance = new Board();
 
+	
 	public void initialize() {
 
 		try {
