@@ -21,12 +21,13 @@ public class Board {
 	private BoardCell[][] board;
 	private Map<Character, String> legend;
 	private Map<BoardCell, Set<BoardCell>> adjMatrix;
-	private Set<BoardCell> targets;
+	private Set<BoardCell> targets = new HashSet<BoardCell>();
 	private String boardConfigFile;
 	private String roomConfigFile;
 	private static Board theInstance = new Board();
+	private Set<BoardCell> visited = new HashSet<BoardCell>();
 
-	
+
 	public void initialize() {
 
 		try {
@@ -124,32 +125,106 @@ public class Board {
 
 
 	}
-	public void calcAdjacencies() {													//not completed yet but in the works...
+	public void calcAdjacencies() {
 
+		adjMatrix = new HashMap<BoardCell, Set<BoardCell>>();
 		for (int i = 0; i < numColumns; i++) {
 			for (int j = 0; j < numRows; j++) {
-				Set<BoardCell> tempSet = new HashSet<BoardCell>();
-				if(i+1 < numRows) {
-					tempSet.add(theInstance.board[i+1][j]);
-				}
-				if(i-1 >= 0) {
-					tempSet.add(theInstance.board[i-1][j]);
-				}
-				if(j+1 < numColumns) {
-					tempSet.add(theInstance.board[i][j+1]);
-				}
-				if(j-1 >= 0) {
-					tempSet.add(theInstance.board[i][j-1]);
-				}
-				adjMatrix.put(theInstance.board[i][j], tempSet);
+				Set<BoardCell> tempAdjSet = new HashSet<BoardCell>();
+				if(theInstance.board[j][i].isWalkway() || theInstance.board[j][i].isDoorway()) {
 
+					if(theInstance.board[j][i].isDoorway()) {														//if we are on a doorway, then the only way we can go is out in the opposite direction of the door
+						if (theInstance.board[j][i].getDoorDirection().equals(DoorDirection.DOWN)) {				//door direction  down case
+							tempAdjSet.add(theInstance.board[j+1][i]);
+						}
+						if (theInstance.board[j][i].getDoorDirection().equals(DoorDirection.UP)) {					//door direction is up case
+							tempAdjSet.add(theInstance.board[j-1][i]);
+						}
+						if (theInstance.board[j][i].getDoorDirection().equals(DoorDirection.RIGHT)) {				//door direction is right case
+							tempAdjSet.add(theInstance.board[j][i+1]);
+						}
+						if (theInstance.board[j][i].getDoorDirection().equals(DoorDirection.LEFT)) {				//door direction is left case
+							tempAdjSet.add(theInstance.board[j][i-1]);	
+						}
+						adjMatrix.put(theInstance.board[j][i], tempAdjSet);
+
+					}
+
+					else if(!theInstance.board[j][i].isDoorway()) {													//if we are not on a doorway, add each direction to the temporary adjacency set unless it is a room or closet or the wrong side of a door 
+
+						if((j+1 < numRows) && (!(theInstance.board[j+1][i].isRoom()) || theInstance.board[j+1][i].isDoorway()) && theInstance.board[j+1][i].getInitial() != 'X') {		//test cell below and see if it meets criteria for adjacent cell
+							if (theInstance.board[j+1][i].isDoorway()) {
+								if(theInstance.board[j+1][i].getDoorDirection().equals(DoorDirection.UP)) {
+									tempAdjSet.add(theInstance.board[j+1][i]);
+								}
+							} else {
+								tempAdjSet.add(theInstance.board[j+1][i]);
+							}
+						}
+						if((j-1 >= 0) && (!(theInstance.board[j-1][i].isRoom()) || theInstance.board[j-1][i].isDoorway()) && theInstance.board[j-1][i].getInitial() != 'X') {			//test cell above and see if it meets criteria for adjacent cell
+							if (theInstance.board[j-1][i].isDoorway()) {
+								if(theInstance.board[j-1][i].getDoorDirection().equals(DoorDirection.DOWN)) {
+									tempAdjSet.add(theInstance.board[j-1][i]);
+								}
+							} else {
+								tempAdjSet.add(theInstance.board[j-1][i]);
+							}
+						}
+						if((i+1 < numColumns) && (!(theInstance.board[j][i+1].isRoom()) || theInstance.board[j][i+1].isDoorway()) && theInstance.board[j][i+1].getInitial() != 'X') {	//test cell to the right and see if it meets criteria for adjacent cell
+							if (theInstance.board[j][i+1].isDoorway()) {
+								if(theInstance.board[j][i+1].getDoorDirection().equals(DoorDirection.LEFT)) {
+									tempAdjSet.add(theInstance.board[j][i+1]);
+								}
+							} else {
+								tempAdjSet.add(theInstance.board[j][i+1]);
+							}
+						}
+						if((i-1 >= 0) && (!(theInstance.board[j][i-1].isRoom()) || theInstance.board[j][i-1].isDoorway()) && theInstance.board[j][i-1].getInitial() != 'X') {			//test cell to the left and see if it meets criteria for adjacent cell
+							if (theInstance.board[j][i-1].isDoorway()) {
+								if(theInstance.board[j][i-1].getDoorDirection().equals(DoorDirection.RIGHT)) {
+									tempAdjSet.add(theInstance.board[j][i-1]);
+								}
+							} else {
+								tempAdjSet.add(theInstance.board[j][i-1]);
+							}
+						}
+						adjMatrix.put(theInstance.board[j][i], tempAdjSet);
+					}
+
+				} else {
+					adjMatrix.put(theInstance.board[j][i], tempAdjSet);
+				}
 			}
 		}
 
 	}
 
 	public void calcTargets(int row, int column, int pathLength) {
-			
+		targets.clear();															//reset the targets
+		findAllTargets(row, column, pathLength);									//recursive call
+	}
+
+	public void findAllTargets(int row, int column, int pathLength) {				//recursive method to calculate targets
+		BoardCell startCell = theInstance.getCellAt(row, column);
+		visited.add(startCell);
+		for (BoardCell i :  theInstance.getAdjList(row, column)) {					//iterate through adjacent cells and if the pathlength is still greater than one, do the recursive call on each adjacent cell
+			if (i.isDoorway() && !(visited.contains(i))) {
+				targets.add(i);
+			}
+			if (!visited.contains(i)) {
+				visited.add(i);
+				if (pathLength == 1) {
+					targets.add(i);
+				}
+				else {
+					findAllTargets(i.getRow(), i.getColumn(), pathLength - 1);
+
+				}
+				visited.remove(i);
+
+			}
+
+		}
 	}
 
 
@@ -160,7 +235,7 @@ public class Board {
 	public static Board getInstance() {
 		return theInstance;
 	}
-																	//Getters 'n setters:
+	//Getters 'n setters:
 	public BoardCell getCellAt(int row, int col) {
 		return board[row][col];
 	}
@@ -241,7 +316,7 @@ public class Board {
 	public static void setTheInstance(Board theInstance) {
 		Board.theInstance = theInstance;
 	}
-	
+
 	public Set<BoardCell> getAdjList(int row, int column){
 		return adjMatrix.get(board[row][column]);
 	}
