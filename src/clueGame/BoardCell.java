@@ -16,12 +16,13 @@ public class BoardCell {
 	public void setInitial(char initial) {
 		this.initial = initial;
 	}
-
+	
+	//constructor sets row and column to parameters
 	public BoardCell(int row, int column, char initial) {
 		super();
 	
 		this.row = row;
-		this.column = column;					//default constructor sets row and column to parameters
+		this.column = column;
 		this.initial = initial;
 		door = DoorDirection.NONE;
 	}
@@ -61,7 +62,7 @@ public class BoardCell {
 			return false;
 		}
 	}
-	
+	//returns true if the BoardCell is a doorway
 	public boolean isDoorway() {
 		if(this.getDoorDirection() != DoorDirection.NONE) {
 			return true;
