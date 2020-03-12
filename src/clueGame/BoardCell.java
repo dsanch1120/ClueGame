@@ -51,7 +51,7 @@ public class BoardCell {
 		}
 	}
 
-	public boolean isX() {
+	public boolean isCloset() {
 		return initial == 'X';
 	}
 
