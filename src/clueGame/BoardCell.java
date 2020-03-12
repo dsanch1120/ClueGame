@@ -8,7 +8,7 @@ public class BoardCell {
 	private int column;
 	private char initial;
 	private DoorDirection door;
-	
+
 	public char getInitial() {
 		return initial;
 	}
@@ -16,11 +16,11 @@ public class BoardCell {
 	public void setInitial(char initial) {
 		this.initial = initial;
 	}
-	
+
 	//constructor sets row and column to parameters
 	public BoardCell(int row, int column, char initial) {
 		super();
-	
+
 		this.row = row;
 		this.column = column;
 		this.initial = initial;
@@ -42,7 +42,7 @@ public class BoardCell {
 	public void setColumn(int column) {
 		this.column = column;
 	}
-	
+
 	public boolean isWalkway() {
 		if(this.initial == 'W') {
 			return true;
@@ -50,11 +50,11 @@ public class BoardCell {
 			return false;
 		}
 	}
-	
+
 	public boolean isX() {
 		return initial == 'X';
 	}
-	
+
 	public boolean isRoom() {
 		if(this.initial != 'X' && this.initial != 'W') {
 			return true;
@@ -70,24 +70,31 @@ public class BoardCell {
 			return false;
 		}
 	}
-	
+
+	//Method with a switch statement that assigns door a DoorDirection value
 	public void setDoorDirection(char d) {
-		if (d == 'D') {
+		
+		switch (d) {
+		case 'D':
 			this.door = DoorDirection.DOWN;
-		}
-		if (d == 'U') {
+			break;
+		case 'U':
 			this.door = DoorDirection.UP;
-		}
-		if (d == 'L') {
+			break;
+		case 'L':
 			this.door = DoorDirection.LEFT;
-		}
-		if (d == 'R') {
+			break;
+		case 'R':
 			this.door = DoorDirection.RIGHT;
+			break;
+		default:
+			this.door = DoorDirection.NONE;
+			break;
 		}
 	}
-	
+
 	public DoorDirection getDoorDirection() {
 		return door;
 	}
-	
+
 }
