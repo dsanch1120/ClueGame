@@ -267,28 +267,8 @@ public class Board {
 		return numRows;
 	}
 
-	public void setNumRows(int numRows) {
-		this.numRows = numRows;
-	}
-
 	public int getNumColumns() {
 		return numColumns;
-	}
-
-	public void setNumColumns(int numColumns) {
-		this.numColumns = numColumns;
-	}
-
-	public static int getMAX_BOARD_SIZE() {
-		return MAX_BOARD_SIZE;
-	}
-
-	public static void setMAX_BOARD_SIZE(int mAX_BOARD_SIZE) {
-		MAX_BOARD_SIZE = mAX_BOARD_SIZE;
-	}
-
-	public BoardCell[][] getBoard() {
-		return board;
 	}
 
 	public void setBoard(BoardCell[][] board) {
@@ -299,15 +279,7 @@ public class Board {
 		return legend;
 	}
 
-	public void setLegend(Map<Character, String> legend) {
-		this.legend = legend;
-	}
-
-	public Map<BoardCell, Set<BoardCell>> getAdjMatrix() {
-		return adjMatrix;
-	}
-
-	public void setAdjMatrix(Map<BoardCell, Set<BoardCell>> adjMatrix) {
+	void setAdjMatrix(Map<BoardCell, Set<BoardCell>> adjMatrix) {
 		this.adjMatrix = adjMatrix;
 	}
 
@@ -315,29 +287,9 @@ public class Board {
 		return targets;
 	}
 
-	public void setTargets(Set<BoardCell> targets) {
-		this.targets = targets;
-	}
-
-	public String getBoardConfigFile() {
-		return boardConfigFile;
-	}
-
 	public void setConfigFiles(String boardConfigFile, String roomConfigFile) {
 		this.boardConfigFile = boardConfigFile;
 		this.roomConfigFile = roomConfigFile;
-	}
-
-	public String getRoomConfigFile() {
-		return roomConfigFile;
-	}
-
-	public static Board getTheInstance() {
-		return theInstance;
-	}
-
-	public static void setTheInstance(Board theInstance) {
-		Board.theInstance = theInstance;
 	}
 
 	public Set<BoardCell> getAdjList(int row, int column){
