@@ -84,30 +84,30 @@ public class Board {
 
 	public void loadBoardConfig() throws FileNotFoundException, BadConfigFormatException {
 		File file = new File("data/" + boardConfigFile);
-		Scanner sc = new Scanner(file);
-		int ColumnCount = -1;
+		Scanner scanner = new Scanner(file);
+		int columnCount = -1;
 		int rowCounter = 0;
 		//iterate through board file and count the number of rows and columns
-		while(sc.hasNextLine()) {																	
-			String line[] = sc.nextLine().split(",");
-			if (ColumnCount != -1 && ColumnCount != line.length) {
+		while(scanner.hasNextLine()) {																	
+			String line[] = scanner.nextLine().split(",");
+			if (columnCount >= 0 && columnCount != line.length) {
 				//throw BadConfigFormatException if the number of columns is not consistent
 				throw new BadConfigFormatException("Number of columns must be the same for each row");	
 			}
-			ColumnCount = line.length;
+			columnCount = line.length;
 			rowCounter++;
 		}
 
-		theInstance.board = new BoardCell[rowCounter][ColumnCount];
-		numColumns = ColumnCount;
+		theInstance.board = new BoardCell[rowCounter][columnCount];
+		numColumns = columnCount;
 		numRows = rowCounter;
 
-		sc = new Scanner(file);
+		scanner = new Scanner(file);
 
 		rowCounter = 0;
 		//iterate through csv file again to create BoardCells
-		while(sc.hasNextLine()) {																		
-			String line[] = sc.nextLine().split(",");
+		while(scanner.hasNextLine()) {																		
+			String line[] = scanner.nextLine().split(",");
 			for (int i = 0; i < line.length; i++) {
 
 				if(!legend.containsKey(line[i].charAt(0))) {
