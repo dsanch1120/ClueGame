@@ -42,7 +42,6 @@ public class BoardCell {
 		this.column = column;
 	}
 	
-	//FIXME
 	public boolean isWalkway() {
 		if(this.initial == 'W') {
 			return true;
@@ -51,7 +50,6 @@ public class BoardCell {
 		}
 	}
 	
-	//FIXME
 	public boolean isRoom() {
 		if(this.initial != 'X' && this.initial != 'W') {
 			return true;
