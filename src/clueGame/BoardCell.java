@@ -50,6 +50,10 @@ public class BoardCell {
 		}
 	}
 	
+	public boolean isX() {
+		return initial == 'X';
+	}
+	
 	public boolean isRoom() {
 		if(this.initial != 'X' && this.initial != 'W') {
 			return true;

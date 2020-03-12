@@ -152,7 +152,7 @@ public class Board {
 
 					else if(!theInstance.board[j][i].isDoorway()) {													//if we are not on a doorway, add each direction to the temporary adjacency set unless it is a room or closet or the wrong side of a door 
 
-						if((j+1 < numRows) && (!(theInstance.board[j+1][i].isRoom()) || theInstance.board[j+1][i].isDoorway()) && theInstance.board[j+1][i].getInitial() != 'X') {		//test cell below and see if it meets criteria for adjacent cell
+						if((j+1 < numRows) && (!(theInstance.board[j+1][i].isRoom()) || theInstance.board[j+1][i].isDoorway()) && !theInstance.board[j+1][i].isX()) {		//test cell below and see if it meets criteria for adjacent cell
 							if (theInstance.board[j+1][i].isDoorway()) {
 								if(theInstance.board[j+1][i].getDoorDirection().equals(DoorDirection.UP)) {
 									tempAdjSet.add(theInstance.board[j+1][i]);
@@ -161,7 +161,7 @@ public class Board {
 								tempAdjSet.add(theInstance.board[j+1][i]);
 							}
 						}
-						if((j-1 >= 0) && (!(theInstance.board[j-1][i].isRoom()) || theInstance.board[j-1][i].isDoorway()) && theInstance.board[j-1][i].getInitial() != 'X') {			//test cell above and see if it meets criteria for adjacent cell
+						if((j-1 >= 0) && (!(theInstance.board[j-1][i].isRoom()) || theInstance.board[j-1][i].isDoorway()) && !theInstance.board[j-1][i].isX()) {			//test cell above and see if it meets criteria for adjacent cell
 							if (theInstance.board[j-1][i].isDoorway()) {
 								if(theInstance.board[j-1][i].getDoorDirection().equals(DoorDirection.DOWN)) {
 									tempAdjSet.add(theInstance.board[j-1][i]);
@@ -170,7 +170,7 @@ public class Board {
 								tempAdjSet.add(theInstance.board[j-1][i]);
 							}
 						}
-						if((i+1 < numColumns) && (!(theInstance.board[j][i+1].isRoom()) || theInstance.board[j][i+1].isDoorway()) && theInstance.board[j][i+1].getInitial() != 'X') {	//test cell to the right and see if it meets criteria for adjacent cell
+						if((i+1 < numColumns) && (!(theInstance.board[j][i+1].isRoom()) || theInstance.board[j][i+1].isDoorway()) && !theInstance.board[j][i+1].isX()) {	//test cell to the right and see if it meets criteria for adjacent cell
 							if (theInstance.board[j][i+1].isDoorway()) {
 								if(theInstance.board[j][i+1].getDoorDirection().equals(DoorDirection.LEFT)) {
 									tempAdjSet.add(theInstance.board[j][i+1]);
@@ -179,7 +179,7 @@ public class Board {
 								tempAdjSet.add(theInstance.board[j][i+1]);
 							}
 						}
-						if((i-1 >= 0) && (!(theInstance.board[j][i-1].isRoom()) || theInstance.board[j][i-1].isDoorway()) && theInstance.board[j][i-1].getInitial() != 'X') {			//test cell to the left and see if it meets criteria for adjacent cell
+						if((i-1 >= 0) && (!(theInstance.board[j][i-1].isRoom()) || theInstance.board[j][i-1].isDoorway()) && !theInstance.board[j][i-1].isX()) {			//test cell to the left and see if it meets criteria for adjacent cell
 							if (theInstance.board[j][i-1].isDoorway()) {
 								if(theInstance.board[j][i-1].getDoorDirection().equals(DoorDirection.RIGHT)) {
 									tempAdjSet.add(theInstance.board[j][i-1]);
