@@ -3,15 +3,9 @@
  */
 
 package tests;
-
-import static org.junit.Assert.*;
-
-import java.util.HashSet;
 import java.util.Set;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
-
 import clueGame.*;
 
 public class BoardAdjTargetTests {

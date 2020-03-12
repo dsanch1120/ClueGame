@@ -46,44 +46,46 @@ public class Board {
 		File file = new File("data/" + roomConfigFile);												
 		//open a new file scanner to read in the file
 		legend = new HashMap<Character, String>();
-		Scanner sc = new Scanner(file);
+		@SuppressWarnings("resource")
+		Scanner scanner = new Scanner(file);
 		String line = "";
-		Character room; 
-		String rName;
-		String rType;
-		while(sc.hasNextLine()) {
-			line = sc.nextLine();
+		Character roomInitial; 
+		String roomName;
+		String roomType;
+		while(scanner.hasNextLine()) {
+			line = scanner.nextLine();
 
-			room = line.charAt(0);
+			roomInitial = line.charAt(0);
 			if(line.charAt(1)!=',') {																
 				//throw BadConfigFormatException if the second character is anything but a comma indicating that the room initial is not one character long
 				throw new BadConfigFormatException("Room initial can only be one character!");
 			}
 
 
-			rName = line.substring(3, line.lastIndexOf(','));										
+			roomName = line.substring(3, line.lastIndexOf(','));										
 			//set room name
 
-			if(rName == "") {																		
+			if(roomName == "") {																		
 				//throw BadConfigFormatException if the name is 0 characters long
 				throw new BadConfigFormatException("Room name cannot be empty!");
 			}
 
-			rType = line.substring((line.lastIndexOf(',') + 2), (line.length()));					
+			roomType = line.substring((line.lastIndexOf(',') + 2), (line.length()));					
 			//set room type
 
-			if(!(rType.equals("Card") || rType.contentEquals("Other"))) {							
+			if(!(roomType.equals("Card") || roomType.contentEquals("Other"))) {							
 				//throw BadConfigFormatException if the room type is not Card or Other
 				throw new BadConfigFormatException("Room type must either be Card or Other");
 			}
 
 			//add room to legend
-			legend.put(room, rName);																
+			legend.put(roomInitial, roomName);																
 		}
 	}
 
 	public void loadBoardConfig() throws FileNotFoundException, BadConfigFormatException {
 		File file = new File("data/" + boardConfigFile);
+		@SuppressWarnings("resource")
 		Scanner scanner = new Scanner(file);
 		int columnCount = -1;
 		int rowCounter = 0;
