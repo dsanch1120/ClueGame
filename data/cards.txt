@@ -1,0 +1,21 @@
+Kitchen, ROOM
+Rec Room, ROOM
+Bathroom, ROOM
+Family Room, ROOM
+Guest Room, ROOM
+Nursery, ROOM
+Study, ROOM
+Dining Room, ROOM
+Lounge, ROOM
+Mrs. White, PERSON
+Mr. Green, PERSON
+Mrs. Peacock, PERSON
+Professor Plum, PERSON
+Miss Scarlett, PERSON
+Colonel Mustard, PERSON
+Candlestick, WEAPON
+Wrench, WEAPON
+Rope, WEAPON
+Lead Pipe, WEAPON
+Knife, WEAPON
+Revolver, WEAPON
