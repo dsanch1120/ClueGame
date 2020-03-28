@@ -108,7 +108,7 @@ public class gameSetupTests {
 		}
 		assertEquals(numPeople, 6);
 		assertEquals(numRooms, 9);
-		assertEquals(numRooms, 6);
+		assertEquals(numWeapons, 6);
 		
 		//Checks 3 of the cards to see that they loaded correctly
 		//Checks card names

@@ -39,6 +39,7 @@ public class Board {
 			theInstance.loadBoardConfig();
 			theInstance.calcAdjacencies();
 			theInstance.loadPeopleConfig();
+			theInstance.loadCardConfig();
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -224,7 +225,7 @@ public class Board {
 
 	}
 
-	public void loadPeopleConfig() throws FileNotFoundException, BadConfigFormatException {
+	public void loadPeopleConfig() throws FileNotFoundException {
 		File file = new File("data/" + peopleConfigFile);
 		@SuppressWarnings("resource")
 		Scanner scanner = new Scanner(file);
@@ -240,6 +241,21 @@ public class Board {
 			counter++;
 		}
 		
+	}
+	
+	public void loadCardConfig() throws FileNotFoundException {
+		File file = new File("data/" + cardConfigFile);
+		@SuppressWarnings("resource")
+		Scanner scanner = new Scanner(file);
+		int counter = 0;
+		
+		while (scanner.hasNextLine()) {
+			String[] line = scanner.nextLine().split(",");
+			theInstance.cards[counter] = new Card();
+			theInstance.cards[counter].setCardName(line[0]);
+			theInstance.cards[counter].setCardType(line[1]);
+			counter++;
+		}
 	}
 	
 	public void calcTargets(int row, int column, int pathLength) {
