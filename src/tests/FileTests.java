@@ -32,7 +32,7 @@ public class FileTests {
 	@BeforeClass
 	public static void setUp() throws FileNotFoundException {
 		board = Board.getInstance();
-		board.setConfigFiles("layout.csv", "rooms.txt");		
+		board.setConfigFiles("layout.csv", "rooms.txt", null, null);		//FIXME added two nulls as arguments 	
 		board.initialize();
 	}
 	

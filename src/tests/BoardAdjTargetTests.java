@@ -16,7 +16,7 @@ public class BoardAdjTargetTests {
 		// Board is singleton, get the only instance
 		board = Board.getInstance();
 		// set the file names to use my config files
-		board.setConfigFiles("layout.csv", "rooms.txt");		
+		board.setConfigFiles("layout.csv", "rooms.txt", null, null);		//FIXME	added two nulls as arguments		
 		// Initialize will load BOTH config files 
 		board.initialize();
 	}

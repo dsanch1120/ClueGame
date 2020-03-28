@@ -24,8 +24,11 @@ public class Board {
 	private Set<BoardCell> targets = new HashSet<BoardCell>();
 	private String boardConfigFile;
 	private String roomConfigFile;
+	private String peopleConfigFile;
+	private String cardConfigFile;
 	private static Board theInstance = new Board();
 	private Set<BoardCell> visited = new HashSet<BoardCell>();
+	private Player[] players;
 
 
 	public void initialize() {
@@ -34,13 +37,12 @@ public class Board {
 			theInstance.loadRoomConfig();
 			theInstance.loadBoardConfig();
 			theInstance.calcAdjacencies();
+			
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-
-
 
 	public void loadRoomConfig() throws FileNotFoundException, BadConfigFormatException {
 		File file = new File("data/" + roomConfigFile);												
@@ -289,13 +291,20 @@ public class Board {
 		return targets;
 	}
 
-	public void setConfigFiles(String boardConfigFile, String roomConfigFile) {
+	public void setConfigFiles(String boardConfigFile, String roomConfigFile, String peopleConfigFile, String cardConfigFile) {
 		this.boardConfigFile = boardConfigFile;
 		this.roomConfigFile = roomConfigFile;
+		this.peopleConfigFile = peopleConfigFile;
+		this.cardConfigFile = cardConfigFile;
 	}
 
 	public Set<BoardCell> getAdjList(int row, int column){
 		return adjMatrix.get(board[row][column]);
 	}
 
+	public Player[] getPlayers() {
+		return players;
+	}
+
+	
 }
