@@ -14,6 +14,7 @@ package tests;
 import static org.junit.Assert.*;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Map;
 
 import org.junit.Assert;
@@ -120,6 +121,36 @@ public class gameSetupTests {
 		assertEquals(cards[0].getType(), CardType.ROOM);
 		assertEquals(cards[10].getType(), CardType.PERSON);
 		assertEquals(cards[20].getType(), CardType.WEAPON);
+		
+	}
+	
+	//This test ensures that the deck of cards has been dealt correctly
+	public void testHand() {
+		int cardCounter = 0;
+		//add up all the cards in each player's hand
+		Player[] people = board.getPlayers();
+		for (int i = 0; i < people.length; i++) {
+			cardCounter+=people[i].getHand().size();
+		}
+		assertEquals(cardCounter, 18);
+		//stores the number of cards in the first player's hand
+		int numCardsInHand = people[0].getHand().size();
+		//test to make sure all of the other players have the same amount of cards as the first player or one less card
+		for (int i = 0; i < people.length; i++) {
+			assert(people[i].getHand().size() == numCardsInHand || people[i].getHand().size() == numCardsInHand-1);
+		}
+		//create an arraylist of cards to record all unique cards in all of the players' hands
+		ArrayList<Card> seenCards = new ArrayList<Card>();
+		for (int i = 0; i < people.length; i++) {
+			//iterate through each card in each player's hand and check to see if we have seen it before and if not add it to the list of seen cards
+			for (int j = 0; j < people[i].getHand().size(); j++) {
+				if(!seenCards.contains(people[i].getHand().get(j))) {
+					seenCards.add(people[i].getHand().get(j));
+				}
+			}
+		}
+		//check to make sure the amount of unique cards we have seen is equal to the amount of cards we dealt
+		assertEquals(seenCards.size(), 18);
 		
 	}
 }
