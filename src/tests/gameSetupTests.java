@@ -43,7 +43,7 @@ public class gameSetupTests {
 	}
 	
 	//This tests ensures that the program correctly loads and implements the "people.txt" file
-	//@Test
+	@Test
 	public void testPeople() {
 
 		Player[] people = board.getPlayers();
@@ -85,7 +85,7 @@ public class gameSetupTests {
 	}
 	
 	//This test ensures that the deck of cards is correctly loaded by the program
-	//@Test
+	@Test
 	public void testCard() {
 		Card[] cards = board.getCards();
 		

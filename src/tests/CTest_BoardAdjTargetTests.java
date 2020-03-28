@@ -24,7 +24,7 @@ public class CTest_BoardAdjTargetTests {
 		// Board is singleton, get the only instance
 		board = Board.getInstance();
 		// set the file names to use my config files
-		board.setConfigFiles("CTest_ClueLayout.csv", "CTest_ClueLegend.txt", null, null);		//FIXME added two nulls as arguments		
+		board.setConfigFiles("CTest_ClueLayout.csv", "CTest_ClueLegend.txt", "people.txt", "cards.txt");				
 		// Initialize will load BOTH config files 
 		board.initialize();
 	}

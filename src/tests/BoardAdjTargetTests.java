@@ -16,7 +16,7 @@ public class BoardAdjTargetTests {
 		// Board is singleton, get the only instance
 		board = Board.getInstance();
 		// set the file names to use my config files
-		board.setConfigFiles("layout.csv", "rooms.txt", null, null);		//FIXME	added two nulls as arguments		
+		board.setConfigFiles("layout.csv", "rooms.txt",  "people.txt", "cards.txt");		
 		// Initialize will load BOTH config files 
 		board.initialize();
 	}
@@ -217,10 +217,6 @@ public class BoardAdjTargetTests {
 		
 		board.calcTargets(4, 3, 1);
 		Set<BoardCell> temp = board.getTargets();
-		for (BoardCell i : temp) {
-			System.out.println(i.getRow() + " " + i.getColumn());
-		}
-		System.out.println(temp.size());
 		assert temp.contains(board.getCellAt(4, 4));
 		assert temp.size() == 1;
 	}
