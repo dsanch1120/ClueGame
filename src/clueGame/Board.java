@@ -28,7 +28,7 @@ public class Board {
 	private String cardConfigFile;
 	private static Board theInstance = new Board();
 	private Set<BoardCell> visited = new HashSet<BoardCell>();
-	private Player[] players;
+	private Player[] players = new Player[6];
 
 
 	public void initialize() {
@@ -37,7 +37,7 @@ public class Board {
 			theInstance.loadRoomConfig();
 			theInstance.loadBoardConfig();
 			theInstance.calcAdjacencies();
-			
+			theInstance.loadPeopleConfig();
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -141,6 +141,7 @@ public class Board {
 
 
 	}
+	
 	public void calcAdjacencies() {
 
 		adjMatrix = new HashMap<BoardCell, Set<BoardCell>>();
@@ -222,6 +223,24 @@ public class Board {
 
 	}
 
+	public void loadPeopleConfig() throws FileNotFoundException, BadConfigFormatException {
+		File file = new File("data/" + peopleConfigFile);
+		@SuppressWarnings("resource")
+		Scanner scanner = new Scanner(file);
+		int counter = 0;
+		
+		while (scanner.hasNextLine()) {
+			String[] line = scanner.nextLine().split(",");
+			theInstance.players[counter] = new Player();
+			theInstance.players[counter].setPlayerName(line[0]);
+			theInstance.players[counter].setColor(line[1]);
+			theInstance.players[counter].setRow(Integer.parseInt(line[2]));
+			theInstance.players[counter].setColumn(Integer.parseInt(line[3]));
+			counter++;
+		}
+		
+	}
+	
 	public void calcTargets(int row, int column, int pathLength) {
 		targets.clear();															
 		//reset the targets list before we re-populate it
