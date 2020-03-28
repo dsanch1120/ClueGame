@@ -21,6 +21,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import clueGame.Board;
+import clueGame.Card;
+import clueGame.CardType;
 import clueGame.Player;
 
 import java.awt.Color;
@@ -40,8 +42,9 @@ public class gameSetupTests {
 	}
 	
 	//This tests ensures that the program correctly loads and implements the "people.txt" file
-	@Test
+	//@Test
 	public void testPeople() {
+
 		Player[] people = board.getPlayers();
 		//Tests if the Array of people contains 6 players
 		assertEquals(6, people.length);
@@ -77,7 +80,46 @@ public class gameSetupTests {
 		assertEquals(people[3].getColumn(), 18);
 		assertEquals(people[4].getColumn(), 4);
 		assertEquals(people[5].getColumn(), 24);
-		
 	
+	}
+	
+	//This test ensures that the deck of cards is correctly loaded by the program
+	@Test
+	public void testCard() {
+		Card[] cards = board.getCards();
+		
+		//Checks that the deck has the correct number of cards
+		assertEquals(cards.length, 21);
+		
+		//Checks that the deck has the correct number of each type of card
+		int numPeople = 0; 
+		int numRooms = 0;
+		int numWeapons = 0;
+		for (int i = 0; i < cards.length; i++) {
+			if (cards[i].getType() == CardType.PERSON) {
+				numPeople++;
+			}
+			if (cards[i].getType() == CardType.ROOM) {
+				numRooms++;
+			}
+			if (cards[i].getType() == CardType.WEAPON) {
+				numWeapons++;
+			}
+		}
+		assertEquals(numPeople, 6);
+		assertEquals(numRooms, 9);
+		assertEquals(numRooms, 6);
+		
+		//Checks 3 of the cards to see that they loaded correctly
+		//Checks card names
+		assertEquals(cards[0].getCardName(), "Kitchen");
+		assertEquals(cards[10].getCardName(), "Mr. Green");
+		assertEquals(cards[20].getCardName(), "Revolver");
+		
+		//Checks card type
+		assertEquals(cards[0].getType(), CardType.ROOM);
+		assertEquals(cards[10].getType(), CardType.PERSON);
+		assertEquals(cards[20].getType(), CardType.WEAPON);
+		
 	}
 }

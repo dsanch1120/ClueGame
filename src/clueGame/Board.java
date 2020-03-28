@@ -29,6 +29,7 @@ public class Board {
 	private static Board theInstance = new Board();
 	private Set<BoardCell> visited = new HashSet<BoardCell>();
 	private Player[] players = new Player[6];
+	private Card[] cards = new Card[21];
 
 
 	public void initialize() {
@@ -323,6 +324,10 @@ public class Board {
 
 	public Player[] getPlayers() {
 		return players;
+	}
+	
+	public Card[] getCards() {
+		return cards;
 	}
 
 	
