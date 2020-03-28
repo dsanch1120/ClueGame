@@ -85,7 +85,7 @@ public class gameSetupTests {
 	}
 	
 	//This test ensures that the deck of cards is correctly loaded by the program
-	@Test
+	//@Test
 	public void testCard() {
 		Card[] cards = board.getCards();
 		
@@ -125,6 +125,7 @@ public class gameSetupTests {
 	}
 	
 	//This test ensures that the deck of cards has been dealt correctly
+	@Test
 	public void testHand() {
 		int cardCounter = 0;
 		//add up all the cards in each player's hand

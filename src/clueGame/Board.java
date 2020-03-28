@@ -5,6 +5,8 @@
 package clueGame;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -30,6 +32,7 @@ public class Board {
 	private Set<BoardCell> visited = new HashSet<BoardCell>();
 	private Player[] players = new Player[6];
 	private Card[] cards = new Card[21];
+	private Solution solution;
 
 
 	public void initialize() {
@@ -40,6 +43,7 @@ public class Board {
 			theInstance.calcAdjacencies();
 			theInstance.loadPeopleConfig();
 			theInstance.loadCardConfig();
+			theInstance.dealCards();
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -256,6 +260,43 @@ public class Board {
 			theInstance.cards[counter].setCardType(line[1]);
 			counter++;
 		}
+	}
+	
+	public void dealCards() {
+		ArrayList<Card> roomCards = new ArrayList<Card>();
+		ArrayList<Card> personCards = new ArrayList<Card>();		
+		ArrayList<Card> weaponCards = new ArrayList<Card>();
+		for (int i = 0; i < cards.length; i++) {
+			if(cards[i].getType() == CardType.ROOM) {
+				roomCards.add(cards[i]);
+			}
+			if(cards[i].getType() == CardType.PERSON) {
+				personCards.add(cards[i]);
+			}
+			if(cards[i].getType() == CardType.WEAPON) {
+				weaponCards.add(cards[i]);
+			}
+		}
+		//shuffle lists of room cards, person cards, and weapon cards and pick the first index of each to be the solution
+		Collections.shuffle(roomCards);
+		Collections.shuffle(personCards);
+		Collections.shuffle(weaponCards);
+		solution = new Solution(roomCards.get(0).getCardName(), personCards.get(0).getCardName(), weaponCards.get(0).getCardName());
+		//remove solution from deck
+		roomCards.remove(0);
+		personCards.remove(0);
+		weaponCards.remove(0);
+		ArrayList<Card> dealableCards = new ArrayList<Card>();
+		//consolidate all cards to create dealable deck without the solution
+		dealableCards.addAll(roomCards);
+		dealableCards.addAll(personCards);
+		dealableCards.addAll(weaponCards);
+		//iterate through all dealable cards and deal them
+		for (int i = 0; i < dealableCards.size(); i++) {
+			theInstance.players[i%players.length].addToHand(dealableCards.get(i));
+		}
+		
+		
 	}
 	
 	public void calcTargets(int row, int column, int pathLength) {

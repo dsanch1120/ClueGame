@@ -12,7 +12,7 @@ public class Player {
 	private int row;
 	private int column;
 	private Color color;
-	private ArrayList<Card> hand;
+	private ArrayList<Card> hand = new ArrayList<Card>();
 	
 	
 	public Player() {
@@ -47,8 +47,8 @@ public class Player {
 	public ArrayList<Card> getHand() {
 		return hand;
 	}
-	public void setHand(ArrayList<Card> hand) {
-		this.hand = hand;
+	public void addToHand(Card card) {
+		this.hand.add(card);
 	}
 	public Color convertColor(String strColor) {
 		Color color;
