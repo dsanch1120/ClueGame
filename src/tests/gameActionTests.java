@@ -27,6 +27,7 @@ import clueGame.Card;
 import clueGame.CardType;
 import clueGame.ComputerPlayer;
 import clueGame.Player;
+import clueGame.Solution;
 
 public class gameActionTests {
 
@@ -41,9 +42,9 @@ public class gameActionTests {
 	}
 
 	//Tests if the computer can properly select a target location that makes sense
-	@Test
+	//@Test
 	public void computerTarget() {
-		
+
 		//Testing for randomness with no doors as options
 		ComputerPlayer compPlayer = new ComputerPlayer();
 		int roll = 2;
@@ -62,8 +63,8 @@ public class gameActionTests {
 		for (int count : picks.values()) {
 			assert (count < 500 && count > 300);
 		}
-		
-		
+
+
 		//Tests to ensure that computer always chooses a door if it hasn't been visited
 		compPlayer = new ComputerPlayer();
 		roll = 5;
@@ -76,8 +77,8 @@ public class gameActionTests {
 			}
 		}
 		assertEquals(counter, 1000);
-		
-		
+
+
 		//Tests if computer randomly picks if door is already visited
 		compPlayer = new ComputerPlayer();
 		compPlayer.setVisited(board.getCellAt(22, 18));
@@ -98,11 +99,37 @@ public class gameActionTests {
 			assert (count < 600 && count > 400);
 		}
 	}
-	
-	
-	
-	
-	
+
+	//Tests if the checkSolution method properly returns true and false
+	@Test
+	public void checkAccusation() {
+		Solution gameSolution = board.getSolution();
+
+		//Test passes when solution is correct
+		assert(board.checkAccusation(gameSolution));
+
+		gameSolution.person = "";
+
+		//Test should fail, person is incorrect, room and weapon are correct.
+		assert(!(board.checkAccusation(gameSolution)));
+
+		gameSolution = board.getSolution();
+		gameSolution.room = "";
+
+		//Test should fail, room is incorrect, person and weapon are correct.
+		assert(!(board.checkAccusation(gameSolution)));
+
+		gameSolution = board.getSolution();
+		gameSolution.weapon = "";
+
+		//Test should fail, weapon is incorrect, room and person are correct.
+		assert(!(board.checkAccusation(gameSolution)));
+
+	}
+
+
+
+
 
 
 }

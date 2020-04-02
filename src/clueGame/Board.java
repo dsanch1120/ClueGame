@@ -331,6 +331,12 @@ public class Board {
 		}
 	}
 
+	public boolean checkAccusation(Solution s) {
+		return false;
+	}
+	public Solution getSolution() {
+		return solution;
+	}
 
 	//constructor is private to ensure only one can be created
 	private Board() {}
