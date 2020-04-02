@@ -103,23 +103,23 @@ public class gameActionTests {
 	//Tests if the checkSolution method properly returns true and false
 	@Test
 	public void checkAccusation() {
-		Solution gameSolution = board.getSolution();
-
+		Solution gameSolution = new Solution(board.getSolution().person,board.getSolution().room,board.getSolution().weapon);
 		//Test passes when solution is correct
 		assert(board.checkAccusation(gameSolution));
 
 		gameSolution.person = "";
 
 		//Test should fail, person is incorrect, room and weapon are correct.
-		assert(!(board.checkAccusation(gameSolution)));
+		
+		assert(board.checkAccusation(gameSolution) != true);
 
-		gameSolution = board.getSolution();
+		gameSolution.person = board.getSolution().person;
 		gameSolution.room = "";
 
 		//Test should fail, room is incorrect, person and weapon are correct.
 		assert(!(board.checkAccusation(gameSolution)));
 
-		gameSolution = board.getSolution();
+		gameSolution.weapon = board.getSolution().weapon;
 		gameSolution.weapon = "";
 
 		//Test should fail, weapon is incorrect, room and person are correct.

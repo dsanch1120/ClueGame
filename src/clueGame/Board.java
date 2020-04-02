@@ -281,7 +281,7 @@ public class Board {
 		Collections.shuffle(roomCards);
 		Collections.shuffle(personCards);
 		Collections.shuffle(weaponCards);
-		solution = new Solution(roomCards.get(0).getCardName(), personCards.get(0).getCardName(), weaponCards.get(0).getCardName());
+		theInstance.solution = new Solution(personCards.get(0).getCardName(), roomCards.get(0).getCardName(), weaponCards.get(0).getCardName());
 		//remove solution from deck
 		roomCards.remove(0);
 		personCards.remove(0);
@@ -332,7 +332,11 @@ public class Board {
 	}
 
 	public boolean checkAccusation(Solution s) {
-		return false;
+		if (s.person == theInstance.solution.person && s.room == theInstance.solution.room && s.weapon == theInstance.solution.weapon) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	public Solution getSolution() {
 		return solution;
