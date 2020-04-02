@@ -16,6 +16,7 @@ package tests;
 import static org.junit.Assert.*;
 
 import java.io.FileNotFoundException;
+import java.util.HashMap;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -41,15 +42,67 @@ public class gameActionTests {
 
 	//Tests if the computer can properly select a target location that makes sense
 	@Test
-	public static void computerTarget() {
+	public void computerTarget() {
+		
+		//Testing for randomness with no doors as options
 		ComputerPlayer compPlayer = new ComputerPlayer();
-		compPlayer.setRow(24);
-		compPlayer.setColumn(13);
-		board.calcTargets(24,13,3);
-		BoardCell compPick = compPlayer.pickLocation(board.getTargets());
+		int roll = 2;
+		board.calcTargets(24,13,roll);
+		HashMap<BoardCell, Integer> picks = new HashMap<BoardCell, Integer>();
+		for (int i = 0; i < roll*1000; i++) {
+			BoardCell compPick = compPlayer.pickLocation(board.getTargets());
+			if (!picks.containsKey(compPick)) {
+				picks.put(compPick, 1);
+			} else {
+				int count = picks.get(compPick);
+				count++;
+				picks.replace(compPick, count);
+			}
+		}
+		for (int count : picks.values()) {
+			assert (count < 500 && count > 300);
+		}
 		
 		
+		//Tests to ensure that computer always chooses a door if it hasn't been visited
+		compPlayer = new ComputerPlayer();
+		roll = 5;
+		int counter = 0;
+		board.calcTargets(24,13,5);
+		for (int i = 0; i < 1000; i++) {
+			BoardCell compPick = compPlayer.pickLocation(board.getTargets());
+			if (compPick.isDoorway()) {
+				counter++;
+			}
+		}
+		assertEquals(counter, 1000);
+		
+		
+		//Tests if computer randomly picks if door is already visited
+		compPlayer = new ComputerPlayer();
+		compPlayer.setVisited(board.getCellAt(22, 18));
+		roll = 2;
+		board.calcTargets(23,17,roll);
+		picks = new HashMap<BoardCell, Integer>();
+		for (int i = 0; i < roll*1000; i++) {
+			BoardCell compPick = compPlayer.pickLocation(board.getTargets());
+			if (!picks.containsKey(compPick)) {
+				picks.put(compPick, 1);
+			} else {
+				int count = picks.get(compPick);
+				count++;
+				picks.replace(compPick, count);
+			}
+		}
+		for (int count : picks.values()) {
+			assert (count < 600 && count > 400);
+		}
 	}
+	
+	
+	
+	
+	
 
 
 }
