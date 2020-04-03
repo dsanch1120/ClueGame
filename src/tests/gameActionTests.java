@@ -204,27 +204,28 @@ public class gameActionTests {
 		compPlayer.setBoard(board.getBoard());
 		compPlayer.setLegend(board.getLegend());
 
-		compPlayer.updateRoomsSeen(board.getCards()[0]);
-		compPlayer.updatePeopleSeen(board.getCards()[9]);
-		compPlayer.updateWeaponsSeen(board.getCards()[15]);
+		compPlayer.addToHand(board.getCards()[0]);
+		compPlayer.addToHand(board.getCards()[9]);
+		compPlayer.addToHand(board.getCards()[15]);
 		//check that disproveSuggestion returns null when the player has none of the cards
 		assert (compPlayer.disproveSuggestion(solution) == null);
 		//give computer player one of the cards
-		compPlayer.updateWeaponsSeen(board.getCards()[11]);
+		compPlayer.addToHand(board.getCards()[11]);
 		//test to make sure the one card we added is the one that gets returned
 		assert (compPlayer.disproveSuggestion(solution).equals(board.getCards()[11]));
-		compPlayer.updateWeaponsSeen(board.getCards()[6]);
+		compPlayer.addToHand(board.getCards()[6]);
 		
 		//the counts for the possible cards the player could show
 		int countCard1 = 0;
 		int countCard2 = 0;
 		
 		for (int i = 0; i < 1000; i++) {
-			if (compPlayer.disproveSuggestion(solution).equals(board.getCards()[11])) {
+			Card temp = compPlayer.disproveSuggestion(solution);
+			if (temp.equals(board.getCards()[11])) {
 				countCard1++;
-			}
-			if (compPlayer.disproveSuggestion(solution).equals(board.getCards()[6])) {
+			} else if (temp.equals(board.getCards()[6])) {
 				countCard2++;
+			} else {
 			}
 		}
 		//check to make sure each card the player could have shown is shown randomly

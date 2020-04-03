@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Scanner;
@@ -112,6 +113,22 @@ public class Player {
 	}
 
 	public Card disproveSuggestion(Solution solution) {
+		Collections.shuffle(hand);
+		ArrayList<String> handNames = new ArrayList<String>();
+		for (int i = 0; i < hand.size(); i++) {
+			handNames.add(hand.get(i).getCardName());
+		}
+		Set<String> sol = new HashSet<String>();
+		sol.add(solution.person);
+		sol.add(solution.room);
+		sol.add(solution.weapon);
+		
+		for (int i = 0; i < handNames.size(); i++) {
+			if (sol.contains(handNames.get(i))) {
+				return hand.get(i);
+			}
+		}
+		
 		return null;
 	}
 	
