@@ -21,6 +21,10 @@ public class Board {
 	private int numColumns;
 	public static int MAX_BOARD_SIZE = 50;
 	private BoardCell[][] board;
+	public BoardCell[][] getBoard() {
+		return board;
+	}
+
 	private Map<Character, String> legend;
 	private Map<BoardCell, Set<BoardCell>> adjMatrix;
 	private Set<BoardCell> targets = new HashSet<BoardCell>();

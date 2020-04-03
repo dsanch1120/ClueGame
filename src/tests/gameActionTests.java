@@ -133,6 +133,8 @@ public class gameActionTests {
 
 		//Checks that the player's room suggestion is the same as the room they are in.
 		ComputerPlayer compPlayer = new ComputerPlayer();
+		compPlayer.setBoard(board.getBoard());
+		compPlayer.setLegend(board.getLegend());
 		
 		compPlayer.updateRoomsSeen(board.getCards()[0]);
 		compPlayer.updatePeopleSeen(board.getCards()[9]);
@@ -160,13 +162,14 @@ public class gameActionTests {
 		
 		for (int i = 0; i < 1000; i++) {
 			Solution solution = compPlayer.createSuggestion();
+			//System.out.println(solution.person);
 			if(solution.person.equals("Colonel Mustard")) {
 				mustards++;
-			} else if(solution.person.equals("Miss Scarlett")) {
+			} if(solution.person.equals("Miss Scarlett")) {
 				scarletts++;
 			} if(solution.weapon.equals("Knife")) {
 				knifes++;
-			} else if (solution.weapon.equals("Revolver")) {
+			} if (solution.weapon.equals("Revolver")) {
 				revolvers++;
 			}
 		}

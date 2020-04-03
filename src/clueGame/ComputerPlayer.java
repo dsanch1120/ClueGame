@@ -6,6 +6,7 @@ package clueGame;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class ComputerPlayer extends Player {
@@ -14,6 +15,8 @@ public class ComputerPlayer extends Player {
 	private Set<Card> peopleSeen = new HashSet<Card>();
 	private Set<Card> weaponsSeen = new HashSet<Card>();
 	private Set<Card> roomsSeen = new HashSet<Card>();
+	
+	
 	
 	public Set<Card> getPeopleSeen() {
 		return peopleSeen;
@@ -65,7 +68,51 @@ public class ComputerPlayer extends Player {
 	}
 	
 	public Solution createSuggestion() {
-		return null;
+		Solution output;
+		
+		String roomSuggestion = this.legend.get(board[this.getRow()][this.getColumn()].getInitial());
+		String personSuggestion = "";
+		String weaponSuggestion = "";
+		
+		Collections.shuffle(this.peopleList);
+		Collections.shuffle(this.weaponList);
+		
+		ArrayList<String>stringPeopleList = new ArrayList<String>();
+		for (Card i : peopleList) {
+			stringPeopleList.add(i.getCardName());
+		}
+		ArrayList<String>stringPeopleSeen = new ArrayList<String>();
+		for (Card i : peopleSeen) {
+			stringPeopleSeen.add(i.getCardName());
+		}
+		
+		ArrayList<String>stringWeaponList = new ArrayList<String>();
+		for (Card i : weaponList) {
+			stringWeaponList.add(i.getCardName());
+		}
+		ArrayList<String>stringWeaponSeen = new ArrayList<String>();
+		for (Card i : weaponsSeen) {
+			stringWeaponSeen.add(i.getCardName());
+		}
+	
+		for (String i : stringPeopleList) {
+			if (!(stringPeopleSeen.contains(i))) {
+				personSuggestion = i;
+				break;
+			}
+		}
+		
+		for (String i : stringWeaponList) {
+			if (!stringWeaponSeen.contains(i)) {
+				weaponSuggestion = i;
+				break;
+			}
+		}
+		
+		
+		output = new Solution(personSuggestion, roomSuggestion, weaponSuggestion);
+		
+		return output;
 	}
 	
 }
