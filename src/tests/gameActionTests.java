@@ -128,25 +128,25 @@ public class gameActionTests {
 	}
 
 
-	@Test
+	//@Test
 	public void checkSuggesion() {
 
 		//Checks that the player's room suggestion is the same as the room they are in.
 		ComputerPlayer compPlayer = new ComputerPlayer();
 		compPlayer.setBoard(board.getBoard());
 		compPlayer.setLegend(board.getLegend());
-		
+
 		compPlayer.updateRoomsSeen(board.getCards()[0]);
 		compPlayer.updatePeopleSeen(board.getCards()[9]);
 		compPlayer.updateWeaponsSeen(board.getCards()[15]);
-		
+
 		compPlayer.setRow(24);
 		compPlayer.setColumn(0);
 		String name = board.getLegend().get(board.getCellAt(compPlayer.getRow(), compPlayer.getColumn()).getInitial());
-		
+
 		Solution sol = compPlayer.createSuggestion();
 		assertEquals(name, sol.room);
-		
+
 		//Checks that the people and weapons guessed are random if more than one are not seen
 		compPlayer.updatePeopleSeen(board.getCards()[10]);
 		compPlayer.updateWeaponsSeen(board.getCards()[16]);
@@ -154,12 +154,12 @@ public class gameActionTests {
 		compPlayer.updateWeaponsSeen(board.getCards()[17]);
 		compPlayer.updatePeopleSeen(board.getCards()[12]);
 		compPlayer.updateWeaponsSeen(board.getCards()[18]);
-		
+
 		int mustards = 0;
 		int scarletts = 0;
 		int knifes = 0;
 		int revolvers = 0;
-		
+
 		for (int i = 0; i < 1000; i++) {
 			Solution solution = compPlayer.createSuggestion();
 			//System.out.println(solution.person);
@@ -173,14 +173,14 @@ public class gameActionTests {
 				revolvers++;
 			}
 		}
-		
+
 		assertEquals(1000,(mustards+scarletts));
 		assert(mustards < 600 && mustards > 400 && scarletts < 600 && scarletts > 400);
 
 		assertEquals(1000,(knifes+revolvers));
 		assert(knifes < 600 && knifes > 400 && revolvers < 600 && revolvers > 400);
 
-		
+
 		//Checks that computer chooses the unseen person and weapon if 5 are seen.
 		compPlayer.updatePeopleSeen(board.getCards()[13]);
 		compPlayer.updateWeaponsSeen(board.getCards()[19]);
@@ -193,9 +193,48 @@ public class gameActionTests {
 			}
 		}
 		assertEquals(counter, 100);
+	}
 
+	@Test
+	//check disproveSuggestion method of the Player class
+	public void checkDisproveSuggestion() {
+		
+		Solution solution = new Solution ("Mrs. Peacock", "Study", "Rope");
+		ComputerPlayer compPlayer = new ComputerPlayer();
+		compPlayer.setBoard(board.getBoard());
+		compPlayer.setLegend(board.getLegend());
+
+		compPlayer.updateRoomsSeen(board.getCards()[0]);
+		compPlayer.updatePeopleSeen(board.getCards()[9]);
+		compPlayer.updateWeaponsSeen(board.getCards()[15]);
+		//check that disproveSuggestion returns null when the player has none of the cards
+		assert (compPlayer.disproveSuggestion(solution) == null);
+		//give computer player one of the cards
+		compPlayer.updateWeaponsSeen(board.getCards()[11]);
+		//test to make sure the one card we added is the one that gets returned
+		assert (compPlayer.disproveSuggestion(solution).equals(board.getCards()[11]));
+		compPlayer.updateWeaponsSeen(board.getCards()[6]);
+		
+		//the counts for the possible cards the player could show
+		int countCard1 = 0;
+		int countCard2 = 0;
+		
+		for (int i = 0; i < 1000; i++) {
+			if (compPlayer.disproveSuggestion(solution).equals(board.getCards()[11])) {
+				countCard1++;
+			}
+			if (compPlayer.disproveSuggestion(solution).equals(board.getCards()[6])) {
+				countCard2++;
+			}
+		}
+		//check to make sure each card the player could have shown is shown randomly
+		assertEquals((countCard1+countCard2), 1000);
+		assert(countCard1 < 600 && countCard1 > 400);
+		assert(countCard2 < 600 && countCard2 > 400);
+		
 	}
 
 
 
-}
+
+	}

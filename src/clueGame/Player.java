@@ -111,4 +111,9 @@ public class Player {
 		return color;
 	}
 
+	public Card disproveSuggestion(Solution solution) {
+		return null;
+	}
+	
+	
 }
