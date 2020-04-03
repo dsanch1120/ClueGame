@@ -244,7 +244,10 @@ public class gameActionTests {
 		Solution solution = new Solution("Mrs. White", "Kitchen", "Candlestick");
 		
 		//Sets all player's hands to null, so that no one can disprove a suggestion
-		Player[] players = board.getPlayers();
+		Player[] players = new Player[6];
+		for (int i = 0; i < board.getPlayers().length; i++) {
+			players[i] = board.getPlayers()[i];
+		}
 		ArrayList<Card> emptyHand = new ArrayList<Card>();
 		for (int i = 0; i < players.length; i++) {
 			players[i].setHand(emptyHand);
@@ -256,19 +259,28 @@ public class gameActionTests {
 		
 		//NOTE the player at index 0 will the "accusing" player
 		//Adds sufficient cards to player[0]'s hand so that they can disprove the solution (will still return null)
-		players[0].addToHand(board.getCards()[0]);
-		players[0].addToHand(board.getCards()[9]);
-		players[0].addToHand(board.getCards()[15]);
 		
+		//players[0].addToHand(board.getCards()[0]);
+		//players[0].addToHand(board.getCards()[9]);
+		//players[0].addToHand(board.getCards()[15]);
+		ArrayList<Card> testHand = new ArrayList<Card>();
+		testHand.add(board.getCards()[0]);
+		testHand.add(board.getCards()[9]);
+		testHand.add(board.getCards()[15]);
+		players[0].setHand(testHand);
+				
 		board.setPlayers(players);
 		
-		//Checks that handSuggestion returns null when the accusing player can disprove the solution
+		//Checks that handleSuggestion returns null when the accusing player can disprove the solution
+		//System.out.println(board.handleSuggestions(solution, 0).getCardName());
 		assertEquals(board.handleSuggestions(solution, 0), null);
 		
-		//Sets player at index 1 to a human player for testing
+		//Sets player at index 3 to a human player for testing
 		players[3] = new HumanPlayer();
 		players[0].setHand(emptyHand);
-		players[3].addToHand(board.getCards()[0]);
+		testHand = new ArrayList<Card>();
+		testHand.add(board.getCards()[0]);
+		players[3].setHand(testHand);
 		
 		board.setPlayers(players);
 		
@@ -279,7 +291,9 @@ public class gameActionTests {
 		assertEquals(board.handleSuggestions(solution, 0), board.getCards()[0]);
 		
 		//Adds a card to player at index 2 that can disprove the suggestion
-		players[1].addToHand(board.getCards()[9]);
+		testHand = new ArrayList<Card>();
+		testHand.add(board.getCards()[9]);
+		players[1].setHand(testHand);
 		
 		board.setPlayers(players);
 		
@@ -287,8 +301,6 @@ public class gameActionTests {
 		//Also checks that if human player and computer both can disprove suggestion, it returns the correct card (according to order)
 		assertEquals(board.handleSuggestions(solution, 4), board.getCards()[9]);
 		assertEquals(board.handleSuggestions(solution, 2), board.getCards()[0]);
-		
-		
 		
 	}
 

@@ -335,8 +335,35 @@ public class Board {
 		}
 	}
 
-	public Card handleSuggestions(Solution suggestion, int indx) {
-		
+	//Method to handle player suggestions.
+	public Card handleSuggestions(Solution suggestion, int index) {
+		//Set containing the string values of the suggestion.
+		Set<String> sol = new HashSet<String>();
+		sol.add(suggestion.person);
+		sol.add(suggestion.weapon);
+		sol.add(suggestion.room);
+		//For loop to check every player.
+		for (int i = index + 1; i < players.length; i++) {
+			//If the loop reaches the player who made the accusation, returns null.
+			if (i == index) {
+				return null;
+			}
+			
+			//Checks the hand of the next player in the array to see if they can disprove the suggestion.
+			ArrayList<Card> tempHand = players[i].getHand();
+			Collections.shuffle(tempHand);
+			for (int j = 0; j < tempHand.size(); j++) {
+				if (sol.contains(tempHand.get(j).getCardName())) {
+					//Returns the card if they can disprove the suggestion.
+					return tempHand.get(j);
+				}
+			}
+			
+			//If the player at the highest index is reached, it loops back to the player at index 0.
+			if (i == players.length - 1) {
+				i = -1;
+			}
+		}
 		return null;
 	}
 	

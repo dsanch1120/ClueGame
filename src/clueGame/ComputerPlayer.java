@@ -55,6 +55,7 @@ public class ComputerPlayer extends Player {
 		this.visited = visited;
 	}
 
+	//Method that allows the computer player to randomly select a target.
 	public BoardCell selectTarget( Set<BoardCell> targets) {
 		ArrayList<BoardCell> newTargets = new ArrayList<BoardCell>();
 		for (BoardCell i : targets) {
@@ -72,6 +73,7 @@ public class ComputerPlayer extends Player {
 		return newTargets.get(0);
 	}
 	
+	//Method that allows the computer player to create a suggestion.
 	public Solution createSuggestion() {
 		Solution output;
 		

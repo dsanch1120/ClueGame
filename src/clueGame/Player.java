@@ -39,6 +39,7 @@ public class Player {
 	public Player() {
 		super();
 		setLists();
+		hand = new ArrayList<Card>();
 	}
 
 	private void setLists(){
@@ -119,6 +120,7 @@ public class Player {
 		return color;
 	}
 
+	//Method to disprove the suggestion.
 	public Card disproveSuggestion(Solution solution) {
 		Collections.shuffle(hand);
 		ArrayList<String> handNames = new ArrayList<String>();
