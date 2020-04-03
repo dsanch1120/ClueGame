@@ -18,6 +18,11 @@ public class ComputerPlayer extends Player {
 	
 	
 	
+	public ComputerPlayer() {
+		super();
+		type = PlayerType.COMPUTER;
+	}
+
 	public Set<Card> getPeopleSeen() {
 		return peopleSeen;
 	}

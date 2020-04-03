@@ -16,6 +16,7 @@ package tests;
 import static org.junit.Assert.*;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.junit.BeforeClass;
@@ -26,6 +27,7 @@ import clueGame.BoardCell;
 import clueGame.Card;
 import clueGame.CardType;
 import clueGame.ComputerPlayer;
+import clueGame.HumanPlayer;
 import clueGame.Player;
 import clueGame.Solution;
 
@@ -195,10 +197,10 @@ public class gameActionTests {
 		assertEquals(counter, 100);
 	}
 
-	@Test
+	//@Test
 	//check disproveSuggestion method of the Player class
 	public void checkDisproveSuggestion() {
-		
+
 		Solution solution = new Solution ("Mrs. Peacock", "Study", "Rope");
 		ComputerPlayer compPlayer = new ComputerPlayer();
 		compPlayer.setBoard(board.getBoard());
@@ -214,11 +216,11 @@ public class gameActionTests {
 		//test to make sure the one card we added is the one that gets returned
 		assert (compPlayer.disproveSuggestion(solution).equals(board.getCards()[11]));
 		compPlayer.addToHand(board.getCards()[6]);
-		
+
 		//the counts for the possible cards the player could show
 		int countCard1 = 0;
 		int countCard2 = 0;
-		
+
 		for (int i = 0; i < 1000; i++) {
 			Card temp = compPlayer.disproveSuggestion(solution);
 			if (temp.equals(board.getCards()[11])) {
@@ -232,10 +234,65 @@ public class gameActionTests {
 		assertEquals((countCard1+countCard2), 1000);
 		assert(countCard1 < 600 && countCard1 > 400);
 		assert(countCard2 < 600 && countCard2 > 400);
+
+	}
+
+	//Checks the handSuggestion method in the Board class
+	@Test
+	public void chechHandSuggestions() {
+		//Solution to be used throughout method for testing
+		Solution solution = new Solution("Mrs. White", "Kitchen", "Candlestick");
+		
+		//Sets all player's hands to null, so that no one can disprove a suggestion
+		Player[] players = board.getPlayers();
+		ArrayList<Card> emptyHand = new ArrayList<Card>();
+		for (int i = 0; i < players.length; i++) {
+			players[i].setHand(emptyHand);
+		}
+		board.setPlayers(players);
+		
+		//Checks that handleSuggestions returns null if no one is able to disprove the suggestion
+		assertEquals(board.handleSuggestions(solution, 0), null);
+		
+		//NOTE the player at index 0 will the "accusing" player
+		//Adds sufficient cards to player[0]'s hand so that they can disprove the solution (will still return null)
+		players[0].addToHand(board.getCards()[0]);
+		players[0].addToHand(board.getCards()[9]);
+		players[0].addToHand(board.getCards()[15]);
+		
+		board.setPlayers(players);
+		
+		//Checks that handSuggestion returns null when the accusing player can disprove the solution
+		assertEquals(board.handleSuggestions(solution, 0), null);
+		
+		//Sets player at index 1 to a human player for testing
+		players[3] = new HumanPlayer();
+		players[0].setHand(emptyHand);
+		players[3].addToHand(board.getCards()[0]);
+		
+		board.setPlayers(players);
+		
+		//Checks that method returns null when human player is the only one that can disprove suggestion, but is the one who made the suggestion
+		assertEquals(board.handleSuggestions(solution, 3), null);
+		
+		//Checks that method returns the correct card when only the human player can disprove the suggestion, but didn't make the suggestion
+		assertEquals(board.handleSuggestions(solution, 0), board.getCards()[0]);
+		
+		//Adds a card to player at index 2 that can disprove the suggestion
+		players[1].addToHand(board.getCards()[9]);
+		
+		board.setPlayers(players);
+		
+		//Checks that method returns the correct player (in order) when more than one player can disprove the suggestion
+		//Also checks that if human player and computer both can disprove suggestion, it returns the correct card (according to order)
+		assertEquals(board.handleSuggestions(solution, 4), board.getCards()[9]);
+		assertEquals(board.handleSuggestions(solution, 2), board.getCards()[0]);
+		
+		
 		
 	}
 
 
 
 
-	}
+}

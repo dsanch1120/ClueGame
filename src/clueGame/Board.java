@@ -335,6 +335,15 @@ public class Board {
 		}
 	}
 
+	public Card handleSuggestions(Solution suggestion, int indx) {
+		
+		return null;
+	}
+	
+	public void setPlayers(Player[] players) {
+		this.players = players;
+	}
+
 	public boolean checkAccusation(Solution s) {
 		if (s.person == theInstance.solution.person && s.room == theInstance.solution.room && s.weapon == theInstance.solution.weapon) {
 			return true;

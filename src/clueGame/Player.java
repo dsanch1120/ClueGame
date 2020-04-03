@@ -25,12 +25,16 @@ public class Player {
 	protected ArrayList<Card> roomList = new ArrayList<Card>();
 	protected ArrayList<Card> peopleList = new ArrayList<Card>();
 	protected ArrayList<Card> weaponList = new ArrayList<Card>();
+	protected PlayerType type;
 
 	public void setBoard(BoardCell[][] board) {
 		this.board = board;
 	}
 	public void setLegend(Map<Character, String> legend) {
 		this.legend = legend;
+	}
+	public PlayerType getType() {
+		return type;
 	}
 	public Player() {
 		super();
@@ -84,6 +88,9 @@ public class Player {
 	//Getter functions 
 	public String getPlayerName() {
 		return playerName;
+	}
+	public void setHand(ArrayList<Card> hand) {
+		this.hand = hand;
 	}
 	public int getRow() {
 		return row;
