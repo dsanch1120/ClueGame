@@ -2,12 +2,17 @@ package clueGame;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -19,34 +24,47 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
 
-public class ControlPanelGUI extends JFrame{
-	
+
+
+public class ClueGame extends JFrame{
+
 	private JTextField currentPlayer;
 	private JTextField roll;
-	private ArrayList<JTextField> pHand = new ArrayList<JTextField>();
-	
-	public ControlPanelGUI() {
-		setSize(new Dimension (600, 600));
+	private Board board;
+
+	public ClueGame() {
+		board = Board.getInstance();
+		board.setConfigFiles("layout.csv", "rooms.txt",  "people.txt", "cards.txt");
+		board.initialize();
+
+		setSize(new Dimension (850, 850));
 		setTitle("Clue Game");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+
 		//Adds board to JFrame
-		JPanel cBoard = createBoard();
-		add(cBoard, BorderLayout.CENTER);
-		
+		//JPanel cBoard = createBoard();
+		//add(cBoard, BorderLayout.CENTER);
+
 		//Adds player hand to right side of JFrame
 		JPanel pCards = createCards();
+		Dimension eastSideDim = new Dimension();
+		eastSideDim.width = 100;
+		pCards.setPreferredSize(eastSideDim);
 		add(pCards, BorderLayout.EAST);
-		
+
 		//Adds south Menu to south of JFrame
 		JPanel southMenu = createSouthMenu();
 		add(southMenu, BorderLayout.SOUTH);
-		
+
 		//Adds menu to JFrame
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		menuBar.add(createFileMenu());
+
+		add(Board.getInstance(), BorderLayout.CENTER);
 	}
+
+
 
 	private JPanel createSouthMenu() {
 		class southMenu extends JPanel {
@@ -67,22 +85,23 @@ public class ControlPanelGUI extends JFrame{
 				//Row 2, Column 1
 				panel = createDieRoll();
 				add(panel);
-				
+
 				//Row 2, Column 2
 				panel = createGuess();
 				add(panel);
-				
+
 				//Row 2, Column 3
 				panel = createGuessResponse();
 				add(panel);
 			}
 		}
-		
+
 		southMenu output = new southMenu();
-		
+
 		return output;
 	}
-	
+
+
 	private JMenu createFileMenu() {
 		JMenu menu = new JMenu("File");
 		menu.add(createShowDetectiveNotesItem());
@@ -94,7 +113,8 @@ public class ControlPanelGUI extends JFrame{
 		JMenuItem item = new JMenuItem("Show Detective Notes");
 		class MenuItemListener implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
-
+				DetectiveNotes dn = new DetectiveNotes();
+				dn.setVisible(true);
 			}
 		}
 		item.addActionListener(new MenuItemListener());
@@ -189,42 +209,29 @@ public class ControlPanelGUI extends JFrame{
 		return panel;
 	}
 
-	private JPanel showDetectiveNotes() {
-		JPanel panel = new JPanel();
-
-		return panel;
-	}
-
-	private JPanel createBoard() {
-		JPanel panel = new JPanel();
-		panel.setLayout(new GridLayout(25,25));
-
-		return panel;
-	}
-
 	private JPanel createCards() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new GridLayout(3,1));
-		
+
 		JPanel peopleTitle = new JPanel();
 		JPanel roomTitle = new JPanel();
 		JPanel weaponTitle = new JPanel();
-		
+
 		peopleTitle.setBorder(new TitledBorder(new EtchedBorder(), "People"));
 		roomTitle.setBorder(new TitledBorder(new EtchedBorder(), "Rooms"));
 		weaponTitle.setBorder(new TitledBorder(new EtchedBorder(), "Weapons"));
-		
+
 		panel.add(peopleTitle);
 		panel.add(roomTitle);
 		panel.add(weaponTitle);
 		panel.setBorder(new TitledBorder(new EtchedBorder(), "My Cards"));
-		
+
 		return panel;
 	}
 
 	public static void main(String[] args) {
 
-		ControlPanelGUI cp = new ControlPanelGUI();
+		ClueGame cp = new ClueGame();
 		cp.setVisible(true);
 	}
 }

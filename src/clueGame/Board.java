@@ -3,6 +3,7 @@
  */
 
 package clueGame;
+import java.awt.Graphics;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -13,18 +14,16 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 
+import javax.swing.JPanel;
 
 
-public class Board {
+
+public class Board extends JPanel {
 	//initialize instance variables
 	private int numRows;												
 	private int numColumns;
 	public static int MAX_BOARD_SIZE = 50;
 	private BoardCell[][] board;
-	public BoardCell[][] getBoard() {
-		return board;
-	}
-
 	private Map<Character, String> legend;
 	private Map<BoardCell, Set<BoardCell>> adjMatrix;
 	private Set<BoardCell> targets = new HashSet<BoardCell>();
@@ -367,6 +366,20 @@ public class Board {
 		return null;
 	}
 	
+	public void paintComponent(Graphics cell) {
+		for (int i = 0; i < 25; i++) {
+			for (int j = 0; j < 25; j++) {
+				BoardCell boardcell = Board.getInstance().getCellAt(i, j);
+				boardcell.draw(cell);
+			}
+			
+		}
+		for (int i = 0; i < players.length; i++) {
+			BoardCell boardcell = Board.getInstance().getCellAt(players[i].getRow(), players[i].getColumn());
+			boardcell.drawPlayer(cell, players[i].getColor());
+		}
+	}
+	
 	public void setPlayers(Player[] players) {
 		this.players = players;
 	}
@@ -382,6 +395,10 @@ public class Board {
 		return solution;
 	}
 
+	public BoardCell[][] getBoard() {
+		return board;
+	}
+	
 	//constructor is private to ensure only one can be created
 	private Board() {}
 

@@ -3,4 +3,4 @@ Mr. Green, green,24,13
 Mrs. Peacock, blue,15,0
 Professor Plum, magenta,0,18
 Miss Scarlett, red,0,4
-Colonel Mustard, yellow,18,24
+Colonel Mustard, orange,18,24
