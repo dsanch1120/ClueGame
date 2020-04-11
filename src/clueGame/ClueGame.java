@@ -1,3 +1,7 @@
+/*
+ * Authored by Daniel Sanchez and Trent Douglas
+ */
+
 package clueGame;
 
 import java.awt.BorderLayout;
@@ -33,6 +37,7 @@ public class ClueGame extends JFrame{
 	private Board board;
 
 	public ClueGame() {
+		//Configures board to be used throughout object
 		board = Board.getInstance();
 		board.setConfigFiles("layout.csv", "rooms.txt",  "people.txt", "cards.txt");
 		board.initialize();
@@ -40,10 +45,6 @@ public class ClueGame extends JFrame{
 		setSize(new Dimension (850, 850));
 		setTitle("Clue Game");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-		//Adds board to JFrame
-		//JPanel cBoard = createBoard();
-		//add(cBoard, BorderLayout.CENTER);
 
 		//Adds player hand to right side of JFrame
 		JPanel pCards = createCards();
@@ -61,11 +62,11 @@ public class ClueGame extends JFrame{
 		setJMenuBar(menuBar);
 		menuBar.add(createFileMenu());
 
+		//Adds the board itself to the JFrame
 		add(Board.getInstance(), BorderLayout.CENTER);
 	}
 
-
-
+	//Creates the south part of the JFrame
 	private JPanel createSouthMenu() {
 		class southMenu extends JPanel {
 			public southMenu() {
@@ -101,7 +102,7 @@ public class ClueGame extends JFrame{
 		return output;
 	}
 
-
+	//Creates the File Menu
 	private JMenu createFileMenu() {
 		JMenu menu = new JMenu("File");
 		menu.add(createShowDetectiveNotesItem());
@@ -109,6 +110,7 @@ public class ClueGame extends JFrame{
 		return menu;
 	}
 
+	//Handles the "Show Detective Notes" option on the file menu
 	private JMenuItem createShowDetectiveNotesItem() {
 		JMenuItem item = new JMenuItem("Show Detective Notes");
 		class MenuItemListener implements ActionListener {
@@ -122,6 +124,7 @@ public class ClueGame extends JFrame{
 		return item;
 	}
 
+	//Handles the "Exit" option on the file menu
 	private JMenuItem createFileExitItem() {
 		JMenuItem item = new JMenuItem("Exit");
 		class MenuItemListener implements ActionListener {
@@ -134,6 +137,7 @@ public class ClueGame extends JFrame{
 		return item;
 	}
 
+	//Creates "whose turn?" JPanel 
 	private JPanel createWhoseTurn() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new GridLayout(1,1));
@@ -148,6 +152,7 @@ public class ClueGame extends JFrame{
 		return panel;
 	}
 
+	//Creates "Next Player" JPanel
 	private JPanel createNextPlayerButton() {
 		JButton next = new JButton("Next Player");
 		JPanel panel = new JPanel();
@@ -156,6 +161,7 @@ public class ClueGame extends JFrame{
 		return panel;
 	}
 
+	//Creates "Accusation" Button
 	private JPanel createAccusationButton() {
 		JButton next = new JButton("Make an Accusation");
 		JPanel panel = new JPanel();
@@ -164,6 +170,7 @@ public class ClueGame extends JFrame{
 		return panel;
 	}
 
+	//Creates "Die Roll" JPanel
 	private JPanel createDieRoll() {
 
 		JPanel panel = new JPanel();
@@ -178,7 +185,8 @@ public class ClueGame extends JFrame{
 
 		return panel;
 	}
-
+	
+	//Creates "Guess" JPanel
 	private JPanel createGuess() {
 
 		JPanel panel = new JPanel();
@@ -194,6 +202,7 @@ public class ClueGame extends JFrame{
 		return panel;
 	}
 
+	//Creates "Guess Response" JPanel
 	private JPanel createGuessResponse() {
 
 		JPanel panel = new JPanel();
@@ -209,6 +218,7 @@ public class ClueGame extends JFrame{
 		return panel;
 	}
 
+	//Creates "Cards" JPanel to be shown on the East Side of JFrame
 	private JPanel createCards() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new GridLayout(3,1));

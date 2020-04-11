@@ -1,3 +1,7 @@
+/*
+ * Authored by Daniel Sanchez and Trent Douglas
+ */
+
 package clueGame;
 
 import java.awt.Dimension;
@@ -15,6 +19,7 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
 class DetectiveNotes extends JDialog {
+	//ArrayLists of cards to be used throughout class
 	private ArrayList<String> peopleList = new ArrayList<String>();
 	private ArrayList<String> roomList = new ArrayList<String>();
 	private ArrayList<String> weaponList = new ArrayList<String>();
@@ -25,27 +30,33 @@ class DetectiveNotes extends JDialog {
 		setLayout(new GridLayout(3,2));
 		makeLists();
 
+		//Adds people check to JDialog
 		JPanel panel = peopleCheck();
 		add(panel);
 
-		
+		//Adds people guess to JDialog
 		panel = peopleGuess();
 		add(panel);
 
+		//Adds room check to JDialog
 		panel = roomCheck();
 		add(panel);
 
+		//Adds room guess to JDialog
 		panel = roomGuess();
 		add(panel);
 
+		//Adds weapon check to JDialog
 		panel = weaponCheck();
 		add(panel);
 
+		//Adds weapon guess to JDialog
 		panel = weaponGuess();
 		add(panel);
 		
 	}
 
+	//Creates the card lists to be used throughout class
 	private void makeLists() {
 		try {
 			File file = new File("data/cards.txt");
@@ -72,6 +83,7 @@ class DetectiveNotes extends JDialog {
 		}
 	}
 
+	//Creates the "People Check" JPanel
 	private JPanel peopleCheck() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new GridLayout(3,2));
@@ -86,7 +98,7 @@ class DetectiveNotes extends JDialog {
 		return panel;
 	}
 
-	
+	//Creates the "People Guess" JPanel
 	private JPanel peopleGuess() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new GridLayout(0,1));
@@ -105,6 +117,7 @@ class DetectiveNotes extends JDialog {
 		return panel;
 	}
 
+	//Creates the "Room Check" JPanel
 	private JPanel roomCheck() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new GridLayout(5,2));
@@ -119,6 +132,7 @@ class DetectiveNotes extends JDialog {
 		return panel;
 	}
 
+	//Creates the "Room Guess" JPanel
 	private JPanel roomGuess() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new GridLayout(1,1));
@@ -137,6 +151,7 @@ class DetectiveNotes extends JDialog {
 		return panel;
 	}
 
+	//Creates the "Weapon Check" JPanel
 	private JPanel weaponCheck() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new GridLayout(3,2));
@@ -150,7 +165,8 @@ class DetectiveNotes extends JDialog {
 		
 		return panel;
 	}
-
+	
+	//Creates the "Weapon Guess" JPanel
 	private JPanel weaponGuess() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new GridLayout(1,1));

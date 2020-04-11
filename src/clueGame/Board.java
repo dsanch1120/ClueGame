@@ -366,14 +366,18 @@ public class Board extends JPanel {
 		return null;
 	}
 	
+	//Method to display the board
 	public void paintComponent(Graphics cell) {
-		for (int i = 0; i < 25; i++) {
-			for (int j = 0; j < 25; j++) {
+		//For loop that iterates through every board cell
+		for (int i = 0; i < numRows; i++) {
+			for (int j = 0; j < numColumns; j++) {
 				BoardCell boardcell = Board.getInstance().getCellAt(i, j);
 				boardcell.draw(cell);
 			}
 			
 		}
+		
+		//For loop that iterates through the players
 		for (int i = 0; i < players.length; i++) {
 			BoardCell boardcell = Board.getInstance().getCellAt(players[i].getRow(), players[i].getColumn());
 			boardcell.drawPlayer(cell, players[i].getColor());

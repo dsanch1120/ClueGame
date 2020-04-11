@@ -120,12 +120,13 @@ public class BoardCell {
 		return door;
 	}
 
+	//Method to draw the cell
 	public void draw(Graphics cell) {
+		//Draws the base of the cell
 		switch(this.initial){
 		case('W'):
 			cell.setColor(Color.BLACK);
 			cell.drawRect(x, y, width, height);
-//			this.color = convertColor("yellow");
 			cell.setColor(Color.YELLOW);
 			cell.fillRect(x+1, y+1, width-1, height-1);
 			break;
@@ -141,11 +142,36 @@ public class BoardCell {
 			break;
 		}
 		
+		//If the cell is a door, indicates the door direction
 		if (door != DoorDirection.NONE) {
-			switch door:
+			switch (door) {
+			case LEFT:
+				cell.setColor(color.BLUE);
+				cell.drawRect(x, y, 5, height);
+				cell.fillRect(x, y, 5, height);
+				break;
+			case RIGHT:
+				cell.setColor(color.BLUE);
+				cell.drawRect(x+15, y, 5, height);
+				cell.fillRect(x+15, y, 5, height);
+				break;
+			case UP:
+				cell.setColor(color.BLUE);
+				cell.drawRect(x, y, width, 5);
+				cell.fillRect(x, y, width, 5);
+				break;
+			case DOWN:
+				cell.setColor(color.BLUE);
+				cell.drawRect(x, y+15, width, 5);
+				cell.fillRect(x, y+15, width, 5);
+				break;
+			default:
+					System.exit(0);
+			}
 				
 		}
 		
+		//Individual cases for displaying the room names
 		if(this.column == 1 && this.row == 3) {
 			cell.setColor(color.BLACK);
 			cell.drawString("Kitchen", this.x, this.y);
@@ -186,6 +212,7 @@ public class BoardCell {
 		
 	}
 
+	//Method to display the players on top of the cell
 	public void drawPlayer(Graphics cell, Color color) {
 		cell.setColor(color.BLACK);
 		cell.drawArc(this.x, this.y, this.width, this.height, 0, 360);
