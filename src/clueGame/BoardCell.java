@@ -141,6 +141,11 @@ public class BoardCell {
 			break;
 		}
 		
+		if (door != DoorDirection.NONE) {
+			switch door:
+				
+		}
+		
 		if(this.column == 1 && this.row == 3) {
 			cell.setColor(color.BLACK);
 			cell.drawString("Kitchen", this.x, this.y);
