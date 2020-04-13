@@ -150,7 +150,7 @@ public class Board extends JPanel {
 
 
 	}
-	
+
 	public void calcAdjacencies() {
 
 		adjMatrix = new HashMap<BoardCell, Set<BoardCell>>();
@@ -237,25 +237,34 @@ public class Board extends JPanel {
 		@SuppressWarnings("resource")
 		Scanner scanner = new Scanner(file);
 		int counter = 0;
-		
+
 		while (scanner.hasNextLine()) {
 			String[] line = scanner.nextLine().split(",");
-			theInstance.players[counter] = new Player();
-			theInstance.players[counter].setPlayerName(line[0]);
-			theInstance.players[counter].setColor(line[1]);
-			theInstance.players[counter].setRow(Integer.parseInt(line[2]));
-			theInstance.players[counter].setColumn(Integer.parseInt(line[3]));
-			counter++;
+			if (counter == 0) {
+				theInstance.players[counter] = new HumanPlayer();
+				theInstance.players[counter].setPlayerName(line[0]);
+				theInstance.players[counter].setColor(line[1]);
+				theInstance.players[counter].setRow(Integer.parseInt(line[2]));
+				theInstance.players[counter].setColumn(Integer.parseInt(line[3]));
+				counter++;
+			} else {
+				theInstance.players[counter] = new ComputerPlayer();
+				theInstance.players[counter].setPlayerName(line[0]);
+				theInstance.players[counter].setColor(line[1]);
+				theInstance.players[counter].setRow(Integer.parseInt(line[2]));
+				theInstance.players[counter].setColumn(Integer.parseInt(line[3]));
+				counter++;
+			}
 		}
-		
+
 	}
-	
+
 	public void loadCardConfig() throws FileNotFoundException {
 		File file = new File("data/" + cardConfigFile);
 		@SuppressWarnings("resource")
 		Scanner scanner = new Scanner(file);
 		int counter = 0;
-		
+
 		while (scanner.hasNextLine()) {
 			String[] line = scanner.nextLine().split(",");
 			theInstance.cards[counter] = new Card();
@@ -264,7 +273,7 @@ public class Board extends JPanel {
 			counter++;
 		}
 	}
-	
+
 	public void dealCards() {
 		ArrayList<Card> roomCards = new ArrayList<Card>();
 		ArrayList<Card> personCards = new ArrayList<Card>();		
@@ -294,14 +303,16 @@ public class Board extends JPanel {
 		dealableCards.addAll(roomCards);
 		dealableCards.addAll(personCards);
 		dealableCards.addAll(weaponCards);
+		//Shuffles cards again after they are consolidated
+		Collections.shuffle(dealableCards);
 		//iterate through all dealable cards and deal them
 		for (int i = 0; i < dealableCards.size(); i++) {
 			theInstance.players[i%players.length].addToHand(dealableCards.get(i));
 		}
-		
-		
+
+
 	}
-	
+
 	public void calcTargets(int row, int column, int pathLength) {
 		targets.clear();															
 		//reset the targets list before we re-populate it
@@ -347,7 +358,7 @@ public class Board extends JPanel {
 			if (i == index) {
 				return null;
 			}
-			
+
 			//Checks the hand of the next player in the array to see if they can disprove the suggestion.
 			ArrayList<Card> tempHand = players[i].getHand();
 			Collections.shuffle(tempHand);
@@ -357,7 +368,7 @@ public class Board extends JPanel {
 					return tempHand.get(j);
 				}
 			}
-			
+
 			//If the player at the highest index is reached, it loops back to the player at index 0.
 			if (i == players.length - 1) {
 				i = -1;
@@ -365,7 +376,7 @@ public class Board extends JPanel {
 		}
 		return null;
 	}
-	
+
 	//Method to display the board
 	public void paintComponent(Graphics cell) {
 		//For loop that iterates through every board cell
@@ -374,16 +385,16 @@ public class Board extends JPanel {
 				BoardCell boardcell = Board.getInstance().getCellAt(i, j);
 				boardcell.draw(cell);
 			}
-			
+
 		}
-		
+
 		//For loop that iterates through the players
 		for (int i = 0; i < players.length; i++) {
 			BoardCell boardcell = Board.getInstance().getCellAt(players[i].getRow(), players[i].getColumn());
 			boardcell.drawPlayer(cell, players[i].getColor());
 		}
 	}
-	
+
 	public void setPlayers(Player[] players) {
 		this.players = players;
 	}
@@ -402,7 +413,7 @@ public class Board extends JPanel {
 	public BoardCell[][] getBoard() {
 		return board;
 	}
-	
+
 	//constructor is private to ensure only one can be created
 	private Board() {}
 
@@ -453,10 +464,10 @@ public class Board extends JPanel {
 	public Player[] getPlayers() {
 		return players;
 	}
-	
+
 	public Card[] getCards() {
 		return cards;
 	}
 
-	
+
 }

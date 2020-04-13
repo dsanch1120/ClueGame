@@ -22,6 +22,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
@@ -42,14 +43,18 @@ public class ClueGame extends JFrame{
 		board.setConfigFiles("layout.csv", "rooms.txt",  "people.txt", "cards.txt");
 		board.initialize();
 
+
+
 		setSize(new Dimension (850, 850));
 		setTitle("Clue Game");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+		JOptionPane.showMessageDialog(this, "You are " + board.getPlayers()[0].getPlayerName() + ", press Next Player to begin play");
+
 		//Adds player hand to right side of JFrame
 		JPanel pCards = createCards();
 		Dimension eastSideDim = new Dimension();
-		eastSideDim.width = 100;
+		eastSideDim.width = 150;
 		pCards.setPreferredSize(eastSideDim);
 		add(pCards, BorderLayout.EAST);
 
@@ -185,7 +190,7 @@ public class ClueGame extends JFrame{
 
 		return panel;
 	}
-	
+
 	//Creates "Guess" JPanel
 	private JPanel createGuess() {
 
@@ -224,12 +229,33 @@ public class ClueGame extends JFrame{
 		panel.setLayout(new GridLayout(3,1));
 
 		JPanel peopleTitle = new JPanel();
+		peopleTitle.setLayout(new GridLayout(9,1));
 		JPanel roomTitle = new JPanel();
+		roomTitle.setLayout(new GridLayout(9,1));
 		JPanel weaponTitle = new JPanel();
+		weaponTitle.setLayout(new GridLayout(9,1));
+
 
 		peopleTitle.setBorder(new TitledBorder(new EtchedBorder(), "People"));
 		roomTitle.setBorder(new TitledBorder(new EtchedBorder(), "Rooms"));
 		weaponTitle.setBorder(new TitledBorder(new EtchedBorder(), "Weapons"));
+
+		for (Card card : board.getPlayers()[0].getHand()) {
+			if (card.getType().equals(CardType.PERSON)) {
+				JLabel cardName = new JLabel(card.getCardName());
+				peopleTitle.add(cardName);
+			}
+			if (card.getType().equals(CardType.ROOM)) {
+				JLabel cardName = new JLabel(card.getCardName());
+				roomTitle.add(cardName);
+			}
+			if (card.getType().equals(CardType.WEAPON)) {
+				JLabel cardName = new JLabel(card.getCardName());
+				weaponTitle.add(cardName);
+			}
+		}
+
+
 
 		panel.add(peopleTitle);
 		panel.add(roomTitle);
