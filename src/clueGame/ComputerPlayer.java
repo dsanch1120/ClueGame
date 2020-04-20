@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class ComputerPlayer extends Player {
-	
+	Board gameBoard = Board.getInstance();
 	private BoardCell visited = new BoardCell(0,0,'K');
 	private Set<Card> peopleSeen = new HashSet<Card>();
 	private Set<Card> weaponsSeen = new HashSet<Card>();
@@ -57,18 +57,39 @@ public class ComputerPlayer extends Player {
 
 	//Method that allows the computer player to randomly select a target.
 	public BoardCell selectTarget( Set<BoardCell> targets) {
+		gameBoard = Board.getInstance();
 		ArrayList<BoardCell> newTargets = new ArrayList<BoardCell>();
+		
+		if (targets.size() == 0) {
+			for (BoardCell i : gameBoard.getVisited()) {
+				return i;
+			}
+		}
+		for (BoardCell j : targets) {
+			newTargets.add(j);
+		}
 		for (BoardCell i : targets) {
+			for (int k = 0; k < gameBoard.getPlayers().length; k++) {
+				if(k != gameBoard.getCurrentPlayerIndex()) {
+					if(i.getRow() == (gameBoard.getPlayers()[k].getRow()) && i.getColumn() == (gameBoard.getPlayers()[k].getColumn())) {
+						newTargets.remove(i);
+					}
+				}
+			}
+			
+			
 			if (!visited.equals(i) && i.isDoorway()) {
+				visited = i;
 				return i;
 			} 
 			else if (visited.equals(i)) {
-				targets.remove(i);
+				newTargets.remove(i);
 			} 
-			else {
-				newTargets.add(i);
-			}
+
 		}
+		
+		
+		System.out.println(newTargets.size() + " " + this.getPlayerName());
 		Collections.shuffle(newTargets);
 		return newTargets.get(0);
 	}

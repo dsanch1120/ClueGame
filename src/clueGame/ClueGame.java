@@ -36,6 +36,8 @@ public class ClueGame extends JFrame{
 	private JTextField currentPlayer;
 	private JTextField roll;
 	private Board board;
+	
+
 
 	public ClueGame() {
 		//Configures board to be used throughout object
@@ -58,10 +60,25 @@ public class ClueGame extends JFrame{
 		pCards.setPreferredSize(eastSideDim);
 		add(pCards, BorderLayout.EAST);
 
+		/*
 		//Adds south Menu to south of JFrame
 		JPanel southMenu = createSouthMenu();
 		add(southMenu, BorderLayout.SOUTH);
-
+*/
+		
+		JPanel southMenu = new JPanel();
+		southMenu.setLayout(new GridLayout(2,3));
+		WhoseTurn whoseTurn = new WhoseTurn();
+		southMenu.add(whoseTurn);
+		southMenu.add(new NextPlayerButton(whoseTurn).getButton());
+		southMenu.add(new AccusationButton().getButton());
+		southMenu.add(new DieRoll());
+		southMenu.add(new Guess());
+		southMenu.add(new GuessResponse());
+		
+		
+		
+		add(southMenu, BorderLayout.SOUTH);
 		//Adds menu to JFrame
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -71,42 +88,7 @@ public class ClueGame extends JFrame{
 		add(Board.getInstance(), BorderLayout.CENTER);
 	}
 
-	//Creates the south part of the JFrame
-	private JPanel createSouthMenu() {
-		class southMenu extends JPanel {
-			public southMenu() {
-				setLayout(new GridLayout(2,3));
-				//Row 1, Column 1
-				JPanel panel = createWhoseTurn();
-				add(panel);
-
-				//Row 1, Column 2
-				panel = createNextPlayerButton();
-				add(panel);
-
-				//Row 1, Column3
-				panel = createAccusationButton();
-				add(panel);
-
-				//Row 2, Column 1
-				panel = createDieRoll();
-				add(panel);
-
-				//Row 2, Column 2
-				panel = createGuess();
-				add(panel);
-
-				//Row 2, Column 3
-				panel = createGuessResponse();
-				add(panel);
-			}
-		}
-
-		southMenu output = new southMenu();
-
-		return output;
-	}
-
+	
 	//Creates the File Menu
 	private JMenu createFileMenu() {
 		JMenu menu = new JMenu("File");
@@ -140,87 +122,6 @@ public class ClueGame extends JFrame{
 		item.addActionListener(new MenuItemListener());
 
 		return item;
-	}
-
-	//Creates "whose turn?" JPanel 
-	private JPanel createWhoseTurn() {
-		JPanel panel = new JPanel();
-		panel.setLayout(new GridLayout(1,1));
-
-		JLabel whoseTurn = new JLabel("Whose Turn?");
-		currentPlayer = new JTextField(20);
-		//currentPlayer = "M"
-		currentPlayer.setEditable(false);
-		panel.add(whoseTurn);
-		panel.add(currentPlayer);
-		panel.setBorder(new EtchedBorder());
-		return panel;
-	}
-
-	//Creates "Next Player" JPanel
-	private JPanel createNextPlayerButton() {
-		JButton next = new JButton("Next Player");
-		JPanel panel = new JPanel();
-		panel.add(next);
-
-		return panel;
-	}
-
-	//Creates "Accusation" Button
-	private JPanel createAccusationButton() {
-		JButton next = new JButton("Make an Accusation");
-		JPanel panel = new JPanel();
-		panel.add(next);
-
-		return panel;
-	}
-
-	//Creates "Die Roll" JPanel
-	private JPanel createDieRoll() {
-
-		JPanel panel = new JPanel();
-		panel.setLayout(new GridLayout(1,1));
-
-		JLabel rollTitle = new JLabel("Roll");
-		roll = new JTextField(1);
-		roll.setEditable(false);
-		panel.add(rollTitle);
-		panel.add(roll);
-		panel.setBorder(new TitledBorder(new EtchedBorder(), "Die"));
-
-		return panel;
-	}
-
-	//Creates "Guess" JPanel
-	private JPanel createGuess() {
-
-		JPanel panel = new JPanel();
-		panel.setLayout(new GridLayout(1,1));
-
-		JLabel rollTitle = new JLabel("Guess");
-		roll = new JTextField(30);
-		roll.setEditable(false);
-		panel.add(rollTitle);
-		panel.add(roll);
-		panel.setBorder(new TitledBorder(new EtchedBorder(), "Guess"));
-
-		return panel;
-	}
-
-	//Creates "Guess Response" JPanel
-	private JPanel createGuessResponse() {
-
-		JPanel panel = new JPanel();
-		panel.setLayout(new GridLayout(1,1));
-
-		JLabel rollTitle = new JLabel("Response");
-		roll = new JTextField(1);
-		roll.setEditable(false);
-		panel.add(rollTitle);
-		panel.add(roll);
-		panel.setBorder(new TitledBorder(new EtchedBorder(), "Guess Result"));
-
-		return panel;
 	}
 
 	//Creates "Cards" JPanel to be shown on the East Side of JFrame

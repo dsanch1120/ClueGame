@@ -3,7 +3,10 @@
  */
 
 package clueGame;
+import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -14,11 +17,13 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 
 
-public class Board extends JPanel {
+public class Board extends JPanel{
 	//initialize instance variables
 	private int numRows;												
 	private int numColumns;
@@ -36,7 +41,28 @@ public class Board extends JPanel {
 	private Player[] players = new Player[6];
 	private Card[] cards = new Card[21];
 	private Solution solution;
+	private int roll = 0;
+	private int currentPlayerIndex = -1;
+	private Boolean hasMoved = true;
+	private Boolean hasPrinted = false;
+	private int humanX = 6;
+	private int humanY = 24;
 
+	public Boolean getHasMoved() {
+		return hasMoved;
+	}
+
+	public void setHasMoved(Boolean hasMoved) {
+		this.hasMoved = hasMoved;
+	}
+
+	public int getCurrentPlayerIndex() {
+		return currentPlayerIndex;
+	}
+
+	public void setCurrentPlayerIndex(int currentPlayerIndex) {
+		this.currentPlayerIndex = currentPlayerIndex;
+	}
 
 	public void initialize() {
 
@@ -92,6 +118,59 @@ public class Board extends JPanel {
 			//add room to legend
 			legend.put(roomInitial, roomName);																
 		}
+	}
+
+	public void roll() {
+		ArrayList<Integer> nums = new ArrayList<Integer>();
+		nums.add(1);
+		nums.add(2);
+		nums.add(3);
+		nums.add(4);
+		nums.add(5);
+		nums.add(6);
+		Collections.shuffle(nums);
+		this.roll = nums.get(0);
+
+	}
+
+	public int getRoll() {
+		return roll;
+	}
+
+	public void setRoll(int roll) {
+		this.roll = roll;
+	}
+
+	public static int getMAX_BOARD_SIZE() {
+		return MAX_BOARD_SIZE;
+	}
+
+	public Map<BoardCell, Set<BoardCell>> getAdjMatrix() {
+		return adjMatrix;
+	}
+
+	public String getBoardConfigFile() {
+		return boardConfigFile;
+	}
+
+	public String getRoomConfigFile() {
+		return roomConfigFile;
+	}
+
+	public String getPeopleConfigFile() {
+		return peopleConfigFile;
+	}
+
+	public String getCardConfigFile() {
+		return cardConfigFile;
+	}
+
+	public static Board getTheInstance() {
+		return theInstance;
+	}
+
+	public Set<BoardCell> getVisited() {
+		return visited;
 	}
 
 	public void loadBoardConfig() throws FileNotFoundException, BadConfigFormatException {
@@ -318,6 +397,29 @@ public class Board extends JPanel {
 		//reset the targets list before we re-populate it
 		findAllTargets(row, column, pathLength);									
 		//recursive call
+		visited.clear();	
+		
+		Set<BoardCell> playerLocations = new HashSet<BoardCell>();
+		for (int i = 0; i < players.length; i++) {
+			BoardCell temp = theInstance.getCellAt(players[i].getRow(), players[i].getColumn());
+			playerLocations.add(temp);
+		}
+		
+		Set<BoardCell> newTargets = new HashSet<BoardCell>();
+		
+		for (BoardCell i : targets) {
+			newTargets.add(i);
+		}
+		
+		for (BoardCell i : targets) {
+			for (BoardCell j : playerLocations) {
+				if (i.equals(j)) {
+					newTargets.remove(i);
+				}
+			}
+		}
+		theInstance.targets = newTargets;
+		
 	}
 
 	public void findAllTargets(int row, int column, int pathLength) {				
@@ -380,6 +482,9 @@ public class Board extends JPanel {
 	//Method to display the board
 	public void paintComponent(Graphics cell) {
 		//For loop that iterates through every board cell
+		super.paintComponent(cell);
+		
+		
 		for (int i = 0; i < numRows; i++) {
 			for (int j = 0; j < numColumns; j++) {
 				BoardCell boardcell = Board.getInstance().getCellAt(i, j);
@@ -393,6 +498,36 @@ public class Board extends JPanel {
 			BoardCell boardcell = Board.getInstance().getCellAt(players[i].getRow(), players[i].getColumn());
 			boardcell.drawPlayer(cell, players[i].getColor());
 		}
+
+		if(!hasMoved) {
+			if (theInstance.currentPlayerIndex > -1 && theInstance.players[theInstance.currentPlayerIndex].getType().equals(PlayerType.HUMAN) && theInstance.roll != 0) {
+				theInstance.calcTargets(theInstance.players[currentPlayerIndex].getRow(), theInstance.players[currentPlayerIndex].getColumn(), theInstance.roll);
+				for (BoardCell i : theInstance.targets) {
+					i.drawTargets(cell);
+				}
+			}
+		}
+		hasPrinted = true;
+		
+
+		
+		
+		
+		
+
+		
+		
+		
+		
+		//repaint();
+	}
+
+	public Boolean getHasPrinted() {
+		return hasPrinted;
+	}
+
+	public void setHasPrinted(Boolean hasPrinted) {
+		this.hasPrinted = hasPrinted;
 	}
 
 	public void setPlayers(Player[] players) {
@@ -415,7 +550,10 @@ public class Board extends JPanel {
 	}
 
 	//constructor is private to ensure only one can be created
-	private Board() {}
+	private Board() {
+		Listener listener = new Listener();
+		this.addMouseListener(listener);
+	}
 
 	//This method returns the only Board
 	public static Board getInstance() {
@@ -467,6 +605,100 @@ public class Board extends JPanel {
 
 	public Card[] getCards() {
 		return cards;
+	}
+
+	
+	
+
+
+	public int getHumanX() {
+		return humanX;
+	}
+
+	public void setHumanX(int humanX) {
+		this.humanX = humanX;
+	}
+
+	public int getHumanY() {
+		return humanY;
+	}
+
+	public void setHumanY(int humanY) {
+		this.humanY = humanY;
+	}
+
+
+
+
+
+	public class Listener implements MouseListener{
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			int x = e.getX();
+		    int y = e.getY();
+		    BoardCell clickedCell = theInstance.getCellAt(y/20, x/20);
+		    
+		  
+		    if (theInstance.getPlayers()[currentPlayerIndex].getType().equals(PlayerType.HUMAN)) {
+		    	theInstance.hasMoved = false;
+		    	for (BoardCell i : targets) {
+		    		if (clickedCell.equals(i)) {
+		    			if(!hasMoved) {
+		    				theInstance.getPlayers()[currentPlayerIndex].setRow(y/20);
+			    			theInstance.getPlayers()[currentPlayerIndex].setColumn(x/20);
+			    			theInstance.humanX = x/20;
+			    			theInstance.humanY = y/20;
+			    			
+			    			
+			    			theInstance.hasMoved = true;
+			    			theInstance.repaint();
+		    			}
+		    			
+		    		}
+		    	}
+		    	if(!hasMoved) {
+		    		errorMessage message = new errorMessage();
+		    	}
+		    }
+		    
+		    theInstance.repaint();
+			theInstance.hasMoved = false;
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+		
+		public class errorMessage extends JDialog {
+			public errorMessage() {
+
+				JOptionPane.showMessageDialog(this, "Invalid Entry");
+			}
+		}
+		
+
 	}
 
 

@@ -211,6 +211,14 @@ public class BoardCell {
 		
 		
 	}
+	
+	//Method to draw Targets
+	public void drawTargets(Graphics cell) {
+		cell.setColor(Color.blue);
+		cell.drawRect(x, y, width, height);
+		cell.setColor(Color.blue);
+		cell.fillRect(x+1, y+1, width-1, height-1);
+	}
 
 	//Method to display the players on top of the cell
 	public void drawPlayer(Graphics cell, Color color) {
