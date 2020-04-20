@@ -69,10 +69,11 @@ public class ClueGame extends JFrame{
 		JPanel southMenu = new JPanel();
 		southMenu.setLayout(new GridLayout(2,3));
 		WhoseTurn whoseTurn = new WhoseTurn();
+		DieRoll dieRoll = new DieRoll();
 		southMenu.add(whoseTurn);
-		southMenu.add(new NextPlayerButton(whoseTurn).getButton());
+		southMenu.add(new NextPlayerButton(whoseTurn, dieRoll).getButton());
 		southMenu.add(new AccusationButton().getButton());
-		southMenu.add(new DieRoll());
+		southMenu.add(dieRoll);
 		southMenu.add(new Guess());
 		southMenu.add(new GuessResponse());
 		

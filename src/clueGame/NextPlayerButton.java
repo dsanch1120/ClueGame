@@ -18,9 +18,9 @@ public class NextPlayerButton extends JPanel{
 	private int playerCounter;
 	//private Boolean hasBeenClicked = false;
 	private WhoseTurn whoseTurn;
-	private int oldX = 6;
-	private int oldY = 24;
+	private DieRoll dieRoll;
 	private Boolean firstTurn = true;
+	public static final int playerLength = 6;
 
 
 
@@ -30,8 +30,9 @@ public class NextPlayerButton extends JPanel{
 
 
 
-	public NextPlayerButton(WhoseTurn whoseTurn) {
+	public NextPlayerButton(WhoseTurn whoseTurn, DieRoll dieRoll) {
 		this.whoseTurn = whoseTurn;
+		this.dieRoll = dieRoll;
 		this.button = new JButton("Next Player");
 		this.button.addActionListener(listener);
 		this.playerCounter = 0;
@@ -45,48 +46,41 @@ public class NextPlayerButton extends JPanel{
 		@Override
 
 		public void actionPerformed(ActionEvent e) {
+
 			board = Board.getInstance();
-			boolean showError = false;
-			board.roll();
+			if(board.getCurrentPlayerIndex() != -1 && board.getPlayers()[playerCounter].getType().equals(PlayerType.HUMAN)){
+				if(!board.getHasMoved()) {
+					errorMessage message = new errorMessage();
+					return;
+				} 
+			}
+
+			if (board.getCurrentPlayerIndex() != -1) {
+				playerCounter = (playerCounter +1)%playerLength; 
+			} else {
+				playerCounter = 0;
+			}
 			board.setCurrentPlayerIndex(playerCounter);
+			board.roll();
+			dieRoll.updateText();
 			whoseTurn.updateText();
 
+			if (board.getCurrentPlayerIndex() != -1 && board.getPlayers()[playerCounter].getType().equals(PlayerType.COMPUTER)) {
+				ComputerPlayer temp = (ComputerPlayer) board.getPlayers()[playerCounter];
+				board.calcTargets(board.getPlayers()[playerCounter].getRow(), board.getPlayers()[playerCounter].getColumn(), board.getRoll());
+				BoardCell tempCell = temp.selectTarget(board.getTargets());
+
+				board.getPlayers()[playerCounter].setRow(tempCell.getRow());
+				board.getPlayers()[playerCounter].setColumn(tempCell.getColumn());
+
+				board.setCurrentPlayerIndex(playerCounter);
+
+
+			}
+
+
 			board.repaint();
-			
-			if (!firstTurn && board.getPlayers()[playerCounter].getType().equals(PlayerType.HUMAN) && oldX == board.getHumanX() && oldY == board.getHumanY()) {
-				errorMessage message = new errorMessage();
-				showError = true;
-				board.repaint();
-			}
-			if (!showError) {
-				firstTurn = false;
-				if (board.getPlayers()[playerCounter].getType().equals(PlayerType.COMPUTER)) {
-					ComputerPlayer temp = (ComputerPlayer) board.getPlayers()[playerCounter];
-					board.calcTargets(board.getPlayers()[playerCounter].getRow(), board.getPlayers()[playerCounter].getColumn(), board.getRoll());
-					BoardCell tempCell = temp.selectTarget(board.getTargets());
-
-					board.getPlayers()[playerCounter].setRow(tempCell.getRow());
-					board.getPlayers()[playerCounter].setColumn(tempCell.getColumn());
-					
-					oldX = board.getPlayers()[0].getColumn();
-					oldY = board.getPlayers()[0].getRow();
-					
-					
-
-
-				}
-				playerCounter++;
-				if(playerCounter == 6) {
-					playerCounter = 0;
-					board.setHasMoved(true);
-				} else {
-					board.setHasMoved(false);
-				}
-
-
-				//board.setHasMoved(false);
-				board.repaint();
-			}
+			board.setHasMoved(false);
 
 		}
 	}

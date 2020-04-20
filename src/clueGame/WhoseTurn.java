@@ -24,7 +24,9 @@ public class WhoseTurn extends JPanel{
 		updateText();
 	}
 	public void updateText() {
+		//System.out.println(board.getCurrentPlayerIndex());
 		if (board.getCurrentPlayerIndex() != -1) {
+			
 			currentPlayer.setText(board.getPlayers()[board.getCurrentPlayerIndex()].getPlayerName());
 		}
 		else {

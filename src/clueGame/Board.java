@@ -3,6 +3,7 @@
  */
 
 package clueGame;
+
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
@@ -21,11 +22,9 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-
-
-public class Board extends JPanel{
-	//initialize instance variables
-	private int numRows;												
+public class Board extends JPanel {
+	// initialize instance variables
+	private int numRows;
 	private int numColumns;
 	public static int MAX_BOARD_SIZE = 50;
 	private BoardCell[][] board;
@@ -43,7 +42,7 @@ public class Board extends JPanel{
 	private Solution solution;
 	private int roll = 0;
 	private int currentPlayerIndex = -1;
-	private Boolean hasMoved = true;
+	private Boolean hasMoved = false;
 	private Boolean hasPrinted = false;
 	private int humanX = 6;
 	private int humanY = 24;
@@ -73,50 +72,50 @@ public class Board extends JPanel{
 			theInstance.loadPeopleConfig();
 			theInstance.loadCardConfig();
 			theInstance.dealCards();
-		}
-		catch (Exception e) {
+			theInstance.roll();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	public void loadRoomConfig() throws FileNotFoundException, BadConfigFormatException {
-		File file = new File("data/" + roomConfigFile);												
-		//open a new file scanner to read in the file
+		File file = new File("data/" + roomConfigFile);
+		// open a new file scanner to read in the file
 		legend = new HashMap<Character, String>();
 		@SuppressWarnings("resource")
 		Scanner scanner = new Scanner(file);
 		String line = "";
-		Character roomInitial; 
+		Character roomInitial;
 		String roomName;
 		String roomType;
-		while(scanner.hasNextLine()) {
+		while (scanner.hasNextLine()) {
 			line = scanner.nextLine();
 
 			roomInitial = line.charAt(0);
-			if(line.charAt(1)!=',') {																
-				//throw BadConfigFormatException if the second character is anything but a comma indicating that the room initial is not one character long
+			if (line.charAt(1) != ',') {
+				// throw BadConfigFormatException if the second character is anything but a
+				// comma indicating that the room initial is not one character long
 				throw new BadConfigFormatException("Room initial can only be one character!");
 			}
 
+			roomName = line.substring(3, line.lastIndexOf(','));
+			// set room name
 
-			roomName = line.substring(3, line.lastIndexOf(','));										
-			//set room name
-
-			if(roomName == "") {																		
-				//throw BadConfigFormatException if the name is 0 characters long
+			if (roomName == "") {
+				// throw BadConfigFormatException if the name is 0 characters long
 				throw new BadConfigFormatException("Room name cannot be empty!");
 			}
 
-			roomType = line.substring((line.lastIndexOf(',') + 2), (line.length()));					
-			//set room type
+			roomType = line.substring((line.lastIndexOf(',') + 2), (line.length()));
+			// set room type
 
-			if(!(roomType.equals("Card") || roomType.contentEquals("Other"))) {							
-				//throw BadConfigFormatException if the room type is not Card or Other
+			if (!(roomType.equals("Card") || roomType.contentEquals("Other"))) {
+				// throw BadConfigFormatException if the room type is not Card or Other
 				throw new BadConfigFormatException("Room type must either be Card or Other");
 			}
 
-			//add room to legend
-			legend.put(roomInitial, roomName);																
+			// add room to legend
+			legend.put(roomInitial, roomName);
 		}
 	}
 
@@ -179,12 +178,12 @@ public class Board extends JPanel{
 		Scanner scanner = new Scanner(file);
 		int columnCount = -1;
 		int rowCounter = 0;
-		//iterate through board file and count the number of rows and columns
-		while(scanner.hasNextLine()) {																	
+		// iterate through board file and count the number of rows and columns
+		while (scanner.hasNextLine()) {
 			String line[] = scanner.nextLine().split(",");
 			if (columnCount >= 0 && columnCount != line.length) {
-				//throw BadConfigFormatException if the number of columns is not consistent
-				throw new BadConfigFormatException("Number of columns must be the same for each row");	
+				// throw BadConfigFormatException if the number of columns is not consistent
+				throw new BadConfigFormatException("Number of columns must be the same for each row");
 			}
 			columnCount = line.length;
 			rowCounter++;
@@ -197,36 +196,38 @@ public class Board extends JPanel{
 		scanner = new Scanner(file);
 
 		rowCounter = 0;
-		//iterate through csv file again to create BoardCells
-		while(scanner.hasNextLine()) {																		
+		// iterate through csv file again to create BoardCells
+		while (scanner.hasNextLine()) {
 			String line[] = scanner.nextLine().split(",");
 			for (int i = 0; i < line.length; i++) {
 
-				if(!legend.containsKey(line[i].charAt(0))) {
-					//throw BadConfigFormatException if the initial is not found in the legend
-					throw new BadConfigFormatException("Initial must exist in legend! Couldn't find " + line[i].charAt(0) + " in legend");		
+				if (!legend.containsKey(line[i].charAt(0))) {
+					// throw BadConfigFormatException if the initial is not found in the legend
+					throw new BadConfigFormatException(
+							"Initial must exist in legend! Couldn't find " + line[i].charAt(0) + " in legend");
 				}
-				//create new BoardCell object in theInstance
-				theInstance.board[rowCounter][i] = new BoardCell(rowCounter, i, line[i].charAt(0));		
+				// create new BoardCell object in theInstance
+				theInstance.board[rowCounter][i] = new BoardCell(rowCounter, i, line[i].charAt(0));
 				if (line[i].length() > 2) {
-					//throw BadConfigFormatException if BoardCell initial has more than 2 characters
-					throw new BadConfigFormatException("Board Cell can only be 1 or 2 letters");		
+					// throw BadConfigFormatException if BoardCell initial has more than 2
+					// characters
+					throw new BadConfigFormatException("Board Cell can only be 1 or 2 letters");
 				}
 				if (line[i].length() == 2) {
-					if (line[i].charAt(1) != 'U' &&line[i].charAt(1) != 'D' && line[i].charAt(1) != 'L' && line[i].charAt(1) != 'R' && line[i].charAt(1) != 'N') {
-						//throw BadConfigFormatException if the door direction is not up, down, left, or right, and the second initial is not N.
-						throw new BadConfigFormatException("Door direction must be U, D, L, or R");		
+					if (line[i].charAt(1) != 'U' && line[i].charAt(1) != 'D' && line[i].charAt(1) != 'L'
+							&& line[i].charAt(1) != 'R' && line[i].charAt(1) != 'N') {
+						// throw BadConfigFormatException if the door direction is not up, down, left,
+						// or right, and the second initial is not N.
+						throw new BadConfigFormatException("Door direction must be U, D, L, or R");
 					}
 					if (line[i].charAt(1) != 'N') {
-						//set door direction for doors only
-						theInstance.board[rowCounter][i].setDoorDirection(line[i].charAt(1));			
+						// set door direction for doors only
+						theInstance.board[rowCounter][i].setDoorDirection(line[i].charAt(1));
 					}
 				}
 			}
 			rowCounter++;
 		}
-
-
 
 	}
 
@@ -236,68 +237,78 @@ public class Board extends JPanel{
 		for (int i = 0; i < numColumns; i++) {
 			for (int j = 0; j < numRows; j++) {
 				Set<BoardCell> tempAdjSet = new HashSet<BoardCell>();
-				if(theInstance.board[j][i].isWalkway() || theInstance.board[j][i].isDoorway()) {
-					//if we are on a doorway, then the only way we can go is out in the opposite direction of the door
-					if(theInstance.board[j][i].isDoorway()) {														
+				if (theInstance.board[j][i].isWalkway() || theInstance.board[j][i].isDoorway()) {
+					// if we are on a doorway, then the only way we can go is out in the opposite
+					// direction of the door
+					if (theInstance.board[j][i].isDoorway()) {
 						if (theInstance.board[j][i].getDoorDirection().equals(DoorDirection.DOWN)) {
-							//door direction  down case
-							tempAdjSet.add(theInstance.board[j+1][i]);
+							// door direction down case
+							tempAdjSet.add(theInstance.board[j + 1][i]);
 						}
-						if (theInstance.board[j][i].getDoorDirection().equals(DoorDirection.UP)) {		
-							//door direction is up case
-							tempAdjSet.add(theInstance.board[j-1][i]);
+						if (theInstance.board[j][i].getDoorDirection().equals(DoorDirection.UP)) {
+							// door direction is up case
+							tempAdjSet.add(theInstance.board[j - 1][i]);
 						}
-						if (theInstance.board[j][i].getDoorDirection().equals(DoorDirection.RIGHT)) {	
-							//door direction is right case
-							tempAdjSet.add(theInstance.board[j][i+1]);
+						if (theInstance.board[j][i].getDoorDirection().equals(DoorDirection.RIGHT)) {
+							// door direction is right case
+							tempAdjSet.add(theInstance.board[j][i + 1]);
 						}
-						if (theInstance.board[j][i].getDoorDirection().equals(DoorDirection.LEFT)) {				
-							//door direction is left case
-							tempAdjSet.add(theInstance.board[j][i-1]);	
+						if (theInstance.board[j][i].getDoorDirection().equals(DoorDirection.LEFT)) {
+							// door direction is left case
+							tempAdjSet.add(theInstance.board[j][i - 1]);
 						}
 						adjMatrix.put(theInstance.board[j][i], tempAdjSet);
 
 					}
-					//if we are not on a doorway, add each direction to the temporary adjacency set unless it is a room or closet or the wrong side of a door 
-					else if(!theInstance.board[j][i].isDoorway()) {													
-						if((j+1 < numRows) && (!(theInstance.board[j+1][i].isRoom()) || theInstance.board[j+1][i].isDoorway()) && !theInstance.board[j+1][i].isCloset()) {		
-							//test cell below and see if it meets criteria for adjacent cell
-							if (theInstance.board[j+1][i].isDoorway()) {
-								if(theInstance.board[j+1][i].getDoorDirection().equals(DoorDirection.UP)) {
-									tempAdjSet.add(theInstance.board[j+1][i]);
+					// if we are not on a doorway, add each direction to the temporary adjacency set
+					// unless it is a room or closet or the wrong side of a door
+					else if (!theInstance.board[j][i].isDoorway()) {
+						if ((j + 1 < numRows)
+								&& (!(theInstance.board[j + 1][i].isRoom()) || theInstance.board[j + 1][i].isDoorway())
+								&& !theInstance.board[j + 1][i].isCloset()) {
+							// test cell below and see if it meets criteria for adjacent cell
+							if (theInstance.board[j + 1][i].isDoorway()) {
+								if (theInstance.board[j + 1][i].getDoorDirection().equals(DoorDirection.UP)) {
+									tempAdjSet.add(theInstance.board[j + 1][i]);
 								}
 							} else {
-								tempAdjSet.add(theInstance.board[j+1][i]);
+								tempAdjSet.add(theInstance.board[j + 1][i]);
 							}
 						}
-						if((j-1 >= 0) && (!(theInstance.board[j-1][i].isRoom()) || theInstance.board[j-1][i].isDoorway()) && !theInstance.board[j-1][i].isCloset()) {			
-							//test cell above and see if it meets criteria for adjacent cell
-							if (theInstance.board[j-1][i].isDoorway()) {
-								if(theInstance.board[j-1][i].getDoorDirection().equals(DoorDirection.DOWN)) {
-									tempAdjSet.add(theInstance.board[j-1][i]);
+						if ((j - 1 >= 0)
+								&& (!(theInstance.board[j - 1][i].isRoom()) || theInstance.board[j - 1][i].isDoorway())
+								&& !theInstance.board[j - 1][i].isCloset()) {
+							// test cell above and see if it meets criteria for adjacent cell
+							if (theInstance.board[j - 1][i].isDoorway()) {
+								if (theInstance.board[j - 1][i].getDoorDirection().equals(DoorDirection.DOWN)) {
+									tempAdjSet.add(theInstance.board[j - 1][i]);
 								}
 							} else {
-								tempAdjSet.add(theInstance.board[j-1][i]);
+								tempAdjSet.add(theInstance.board[j - 1][i]);
 							}
 						}
-						if((i+1 < numColumns) && (!(theInstance.board[j][i+1].isRoom()) || theInstance.board[j][i+1].isDoorway()) && !theInstance.board[j][i+1].isCloset()) {	
-							//test cell to the right and see if it meets criteria for adjacent cell
-							if (theInstance.board[j][i+1].isDoorway()) {
-								if(theInstance.board[j][i+1].getDoorDirection().equals(DoorDirection.LEFT)) {
-									tempAdjSet.add(theInstance.board[j][i+1]);
+						if ((i + 1 < numColumns)
+								&& (!(theInstance.board[j][i + 1].isRoom()) || theInstance.board[j][i + 1].isDoorway())
+								&& !theInstance.board[j][i + 1].isCloset()) {
+							// test cell to the right and see if it meets criteria for adjacent cell
+							if (theInstance.board[j][i + 1].isDoorway()) {
+								if (theInstance.board[j][i + 1].getDoorDirection().equals(DoorDirection.LEFT)) {
+									tempAdjSet.add(theInstance.board[j][i + 1]);
 								}
 							} else {
-								tempAdjSet.add(theInstance.board[j][i+1]);
+								tempAdjSet.add(theInstance.board[j][i + 1]);
 							}
 						}
-						if((i-1 >= 0) && (!(theInstance.board[j][i-1].isRoom()) || theInstance.board[j][i-1].isDoorway()) && !theInstance.board[j][i-1].isCloset()) {			
-							//test cell to the left and see if it meets criteria for adjacent cell
-							if (theInstance.board[j][i-1].isDoorway()) {
-								if(theInstance.board[j][i-1].getDoorDirection().equals(DoorDirection.RIGHT)) {
-									tempAdjSet.add(theInstance.board[j][i-1]);
+						if ((i - 1 >= 0)
+								&& (!(theInstance.board[j][i - 1].isRoom()) || theInstance.board[j][i - 1].isDoorway())
+								&& !theInstance.board[j][i - 1].isCloset()) {
+							// test cell to the left and see if it meets criteria for adjacent cell
+							if (theInstance.board[j][i - 1].isDoorway()) {
+								if (theInstance.board[j][i - 1].getDoorDirection().equals(DoorDirection.RIGHT)) {
+									tempAdjSet.add(theInstance.board[j][i - 1]);
 								}
 							} else {
-								tempAdjSet.add(theInstance.board[j][i-1]);
+								tempAdjSet.add(theInstance.board[j][i - 1]);
 							}
 						}
 						adjMatrix.put(theInstance.board[j][i], tempAdjSet);
@@ -355,62 +366,63 @@ public class Board extends JPanel{
 
 	public void dealCards() {
 		ArrayList<Card> roomCards = new ArrayList<Card>();
-		ArrayList<Card> personCards = new ArrayList<Card>();		
+		ArrayList<Card> personCards = new ArrayList<Card>();
 		ArrayList<Card> weaponCards = new ArrayList<Card>();
 		for (int i = 0; i < cards.length; i++) {
-			if(cards[i].getType() == CardType.ROOM) {
+			if (cards[i].getType() == CardType.ROOM) {
 				roomCards.add(cards[i]);
 			}
-			if(cards[i].getType() == CardType.PERSON) {
+			if (cards[i].getType() == CardType.PERSON) {
 				personCards.add(cards[i]);
 			}
-			if(cards[i].getType() == CardType.WEAPON) {
+			if (cards[i].getType() == CardType.WEAPON) {
 				weaponCards.add(cards[i]);
 			}
 		}
-		//shuffle lists of room cards, person cards, and weapon cards and pick the first index of each to be the solution
+		// shuffle lists of room cards, person cards, and weapon cards and pick the
+		// first index of each to be the solution
 		Collections.shuffle(roomCards);
 		Collections.shuffle(personCards);
 		Collections.shuffle(weaponCards);
-		theInstance.solution = new Solution(personCards.get(0).getCardName(), roomCards.get(0).getCardName(), weaponCards.get(0).getCardName());
-		//remove solution from deck
+		theInstance.solution = new Solution(personCards.get(0).getCardName(), roomCards.get(0).getCardName(),
+				weaponCards.get(0).getCardName());
+		// remove solution from deck
 		roomCards.remove(0);
 		personCards.remove(0);
 		weaponCards.remove(0);
 		ArrayList<Card> dealableCards = new ArrayList<Card>();
-		//consolidate all cards to create dealable deck without the solution
+		// consolidate all cards to create dealable deck without the solution
 		dealableCards.addAll(roomCards);
 		dealableCards.addAll(personCards);
 		dealableCards.addAll(weaponCards);
-		//Shuffles cards again after they are consolidated
+		// Shuffles cards again after they are consolidated
 		Collections.shuffle(dealableCards);
-		//iterate through all dealable cards and deal them
+		// iterate through all dealable cards and deal them
 		for (int i = 0; i < dealableCards.size(); i++) {
-			theInstance.players[i%players.length].addToHand(dealableCards.get(i));
+			theInstance.players[i % players.length].addToHand(dealableCards.get(i));
 		}
-
 
 	}
 
 	public void calcTargets(int row, int column, int pathLength) {
-		targets.clear();															
-		//reset the targets list before we re-populate it
-		findAllTargets(row, column, pathLength);									
-		//recursive call
-		visited.clear();	
-		
+		targets.clear();
+		// reset the targets list before we re-populate it
+		findAllTargets(row, column, pathLength);
+		// recursive call
+		visited.clear();
+
 		Set<BoardCell> playerLocations = new HashSet<BoardCell>();
 		for (int i = 0; i < players.length; i++) {
 			BoardCell temp = theInstance.getCellAt(players[i].getRow(), players[i].getColumn());
 			playerLocations.add(temp);
 		}
-		
+
 		Set<BoardCell> newTargets = new HashSet<BoardCell>();
-		
+
 		for (BoardCell i : targets) {
 			newTargets.add(i);
 		}
-		
+
 		for (BoardCell i : targets) {
 			for (BoardCell j : playerLocations) {
 				if (i.equals(j)) {
@@ -419,15 +431,16 @@ public class Board extends JPanel{
 			}
 		}
 		theInstance.targets = newTargets;
-		
+
 	}
 
-	public void findAllTargets(int row, int column, int pathLength) {				
-		//recursive method to calculate targets
+	public void findAllTargets(int row, int column, int pathLength) {
+		// recursive method to calculate targets
 		BoardCell startCell = theInstance.getCellAt(row, column);
 		visited.add(startCell);
-		for (BoardCell i :  theInstance.getAdjList(row, column)) {					
-			//iterate through adjacent cells and if the path length is still greater than one, do the recursive call on each adjacent cell
+		for (BoardCell i : theInstance.getAdjList(row, column)) {
+			// iterate through adjacent cells and if the path length is still greater than
+			// one, do the recursive call on each adjacent cell
 			if (i.isDoorway() && !(visited.contains(i))) {
 				targets.add(i);
 			}
@@ -435,8 +448,7 @@ public class Board extends JPanel{
 				visited.add(i);
 				if (pathLength == 1) {
 					targets.add(i);
-				}
-				else {
+				} else {
 					findAllTargets(i.getRow(), i.getColumn(), pathLength - 1);
 
 				}
@@ -447,31 +459,33 @@ public class Board extends JPanel{
 		}
 	}
 
-	//Method to handle player suggestions.
+	// Method to handle player suggestions.
 	public Card handleSuggestions(Solution suggestion, int index) {
-		//Set containing the string values of the suggestion.
+		// Set containing the string values of the suggestion.
 		Set<String> sol = new HashSet<String>();
 		sol.add(suggestion.person);
 		sol.add(suggestion.weapon);
 		sol.add(suggestion.room);
-		//For loop to check every player.
+		// For loop to check every player.
 		for (int i = index + 1; i < players.length; i++) {
-			//If the loop reaches the player who made the accusation, returns null.
+			// If the loop reaches the player who made the accusation, returns null.
 			if (i == index) {
 				return null;
 			}
 
-			//Checks the hand of the next player in the array to see if they can disprove the suggestion.
+			// Checks the hand of the next player in the array to see if they can disprove
+			// the suggestion.
 			ArrayList<Card> tempHand = players[i].getHand();
 			Collections.shuffle(tempHand);
 			for (int j = 0; j < tempHand.size(); j++) {
 				if (sol.contains(tempHand.get(j).getCardName())) {
-					//Returns the card if they can disprove the suggestion.
+					// Returns the card if they can disprove the suggestion.
 					return tempHand.get(j);
 				}
 			}
 
-			//If the player at the highest index is reached, it loops back to the player at index 0.
+			// If the player at the highest index is reached, it loops back to the player at
+			// index 0.
 			if (i == players.length - 1) {
 				i = -1;
 			}
@@ -479,12 +493,11 @@ public class Board extends JPanel{
 		return null;
 	}
 
-	//Method to display the board
+	// Method to display the board
 	public void paintComponent(Graphics cell) {
-		//For loop that iterates through every board cell
+		// For loop that iterates through every board cell
 		super.paintComponent(cell);
-		
-		
+
 		for (int i = 0; i < numRows; i++) {
 			for (int j = 0; j < numColumns; j++) {
 				BoardCell boardcell = Board.getInstance().getCellAt(i, j);
@@ -493,33 +506,26 @@ public class Board extends JPanel{
 
 		}
 
-		//For loop that iterates through the players
+		// For loop that iterates through the players
 		for (int i = 0; i < players.length; i++) {
 			BoardCell boardcell = Board.getInstance().getCellAt(players[i].getRow(), players[i].getColumn());
 			boardcell.drawPlayer(cell, players[i].getColor());
 		}
 
-		if(!hasMoved) {
-			if (theInstance.currentPlayerIndex > -1 && theInstance.players[theInstance.currentPlayerIndex].getType().equals(PlayerType.HUMAN) && theInstance.roll != 0) {
-				theInstance.calcTargets(theInstance.players[currentPlayerIndex].getRow(), theInstance.players[currentPlayerIndex].getColumn(), theInstance.roll);
+		// System.out.println(theInstance.hasMoved);
+		if (!theInstance.hasMoved) {
+			if (theInstance.currentPlayerIndex > -1
+					&& theInstance.players[theInstance.currentPlayerIndex].getType().equals(PlayerType.HUMAN)
+					&& theInstance.roll != 0) {
+				theInstance.calcTargets(theInstance.players[currentPlayerIndex].getRow(),
+						theInstance.players[currentPlayerIndex].getColumn(), theInstance.roll);
 				for (BoardCell i : theInstance.targets) {
 					i.drawTargets(cell);
 				}
 			}
 		}
 		hasPrinted = true;
-		
 
-		
-		
-		
-		
-
-		
-		
-		
-		
-		//repaint();
 	}
 
 	public Boolean getHasPrinted() {
@@ -535,12 +541,14 @@ public class Board extends JPanel{
 	}
 
 	public boolean checkAccusation(Solution s) {
-		if (s.person == theInstance.solution.person && s.room == theInstance.solution.room && s.weapon == theInstance.solution.weapon) {
+		if (s.person == theInstance.solution.person && s.room == theInstance.solution.room
+				&& s.weapon == theInstance.solution.weapon) {
 			return true;
 		} else {
 			return false;
 		}
 	}
+
 	public Solution getSolution() {
 		return solution;
 	}
@@ -549,17 +557,18 @@ public class Board extends JPanel{
 		return board;
 	}
 
-	//constructor is private to ensure only one can be created
+	// constructor is private to ensure only one can be created
 	private Board() {
 		Listener listener = new Listener();
 		this.addMouseListener(listener);
 	}
 
-	//This method returns the only Board
+	// This method returns the only Board
 	public static Board getInstance() {
 		return theInstance;
 	}
-	//Getters 'n setters:
+
+	// Getters 'n setters:
 	public BoardCell getCellAt(int row, int col) {
 		return board[row][col];
 	}
@@ -588,14 +597,15 @@ public class Board extends JPanel{
 		return targets;
 	}
 
-	public void setConfigFiles(String boardConfigFile, String roomConfigFile, String peopleConfigFile, String cardConfigFile) {
+	public void setConfigFiles(String boardConfigFile, String roomConfigFile, String peopleConfigFile,
+			String cardConfigFile) {
 		this.boardConfigFile = boardConfigFile;
 		this.roomConfigFile = roomConfigFile;
 		this.peopleConfigFile = peopleConfigFile;
 		this.cardConfigFile = cardConfigFile;
 	}
 
-	public Set<BoardCell> getAdjList(int row, int column){
+	public Set<BoardCell> getAdjList(int row, int column) {
 		return adjMatrix.get(board[row][column]);
 	}
 
@@ -607,99 +617,73 @@ public class Board extends JPanel{
 		return cards;
 	}
 
-	
-	
-
-
-	public int getHumanX() {
-		return humanX;
-	}
-
-	public void setHumanX(int humanX) {
-		this.humanX = humanX;
-	}
-
-	public int getHumanY() {
-		return humanY;
-	}
-
-	public void setHumanY(int humanY) {
-		this.humanY = humanY;
-	}
-
-
-
-
-
-	public class Listener implements MouseListener{
+	public class Listener implements MouseListener {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			int x = e.getX();
-		    int y = e.getY();
-		    BoardCell clickedCell = theInstance.getCellAt(y/20, x/20);
-		    
-		  
-		    if (theInstance.getPlayers()[currentPlayerIndex].getType().equals(PlayerType.HUMAN)) {
-		    	theInstance.hasMoved = false;
-		    	for (BoardCell i : targets) {
-		    		if (clickedCell.equals(i)) {
-		    			if(!hasMoved) {
-		    				theInstance.getPlayers()[currentPlayerIndex].setRow(y/20);
-			    			theInstance.getPlayers()[currentPlayerIndex].setColumn(x/20);
-			    			theInstance.humanX = x/20;
-			    			theInstance.humanY = y/20;
-			    			
-			    			
-			    			theInstance.hasMoved = true;
-			    			theInstance.repaint();
-		    			}
-		    			
-		    		}
-		    	}
-		    	if(!hasMoved) {
-		    		errorMessage message = new errorMessage();
-		    	}
-		    }
-		    
-		    theInstance.repaint();
-			theInstance.hasMoved = false;
+			int y = e.getY();
+			BoardCell clickedCell = theInstance.getCellAt(y / 20, x / 20);
+
+			if (theInstance.getPlayers()[currentPlayerIndex].getType().equals(PlayerType.HUMAN)) {
+				// theInstance.hasMoved = false;
+				for (BoardCell i : targets) {
+					if (clickedCell.equals(i)) {
+						if (!hasMoved) {
+							theInstance.getPlayers()[currentPlayerIndex].setRow(y / 20);
+							theInstance.getPlayers()[currentPlayerIndex].setColumn(x / 20);
+
+							theInstance.hasMoved = true;
+
+							// int index = theInstance.getCurrentPlayerIndex();
+							// index++;
+							// theInstance.setCurrentPlayerIndex(index);
+
+							theInstance.repaint();
+						}
+
+					}
+				}
+				if (!hasMoved) {
+					errorMessage message = new errorMessage();
+				}
+			}
+
+			theInstance.repaint();
+			// theInstance.hasMoved = false;
 		}
 
 		@Override
 		public void mousePressed(MouseEvent e) {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void mouseEntered(MouseEvent e) {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void mouseExited(MouseEvent e) {
 			// TODO Auto-generated method stub
-			
+
 		}
-		
-		
+
 		public class errorMessage extends JDialog {
 			public errorMessage() {
 
 				JOptionPane.showMessageDialog(this, "Invalid Entry");
 			}
 		}
-		
 
 	}
-
 
 }

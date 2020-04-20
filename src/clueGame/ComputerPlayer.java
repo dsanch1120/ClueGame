@@ -89,9 +89,14 @@ public class ComputerPlayer extends Player {
 		}
 		
 		
-		System.out.println(newTargets.size() + " " + this.getPlayerName());
+		//System.out.println(newTargets.size() + " " + this.getPlayerName());
 		Collections.shuffle(newTargets);
-		return newTargets.get(0);
+		if(newTargets.size() != 0) {
+			return newTargets.get(0);
+		}
+		else {
+			return (gameBoard.getCellAt(gameBoard.getPlayers()[gameBoard.getCurrentPlayerIndex()].getRow(), gameBoard.getPlayers()[gameBoard.getCurrentPlayerIndex()].getColumn()));
+		}
 	}
 	
 	//Method that allows the computer player to create a suggestion.
