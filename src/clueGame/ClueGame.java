@@ -46,11 +46,12 @@ public class ClueGame extends JFrame{
 		board.initialize();
 
 
-
+		//Sets dimensions and title for the JFrame
 		setSize(new Dimension (850, 850));
 		setTitle("Clue Game");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+		//JDialog box that triggers at the start of the game
 		JOptionPane.showMessageDialog(this, "You are " + board.getPlayers()[0].getPlayerName() + ", press Next Player to begin play");
 
 		//Adds player hand to right side of JFrame
@@ -59,13 +60,8 @@ public class ClueGame extends JFrame{
 		eastSideDim.width = 150;
 		pCards.setPreferredSize(eastSideDim);
 		add(pCards, BorderLayout.EAST);
-
-		/*
-		//Adds south Menu to south of JFrame
-		JPanel southMenu = createSouthMenu();
-		add(southMenu, BorderLayout.SOUTH);
-*/
 		
+		//Creates the menu located on the south side of the JFrame
 		JPanel southMenu = new JPanel();
 		southMenu.setLayout(new GridLayout(2,3));
 		WhoseTurn whoseTurn = new WhoseTurn();

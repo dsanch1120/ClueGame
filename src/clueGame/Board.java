@@ -411,6 +411,7 @@ public class Board extends JPanel {
 		// recursive call
 		visited.clear();
 
+		//Ensures that a target containing another player is not added
 		Set<BoardCell> playerLocations = new HashSet<BoardCell>();
 		for (int i = 0; i < players.length; i++) {
 			BoardCell temp = theInstance.getCellAt(players[i].getRow(), players[i].getColumn());
@@ -616,17 +617,20 @@ public class Board extends JPanel {
 	public Card[] getCards() {
 		return cards;
 	}
-
+	
+	// Mouse listener class to control what happens when it's the human player's turn.
 	public class Listener implements MouseListener {
 
+		//Controls what happens when the user clicks the mouse
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			int x = e.getX();
 			int y = e.getY();
 			BoardCell clickedCell = theInstance.getCellAt(y / 20, x / 20);
 
+			//Checks to ensure that the current player is a human
 			if (theInstance.getPlayers()[currentPlayerIndex].getType().equals(PlayerType.HUMAN)) {
-				// theInstance.hasMoved = false;
+				//Ensures that the user's choice of cells is a correct option
 				for (BoardCell i : targets) {
 					if (clickedCell.equals(i)) {
 						if (!hasMoved) {
@@ -635,48 +639,40 @@ public class Board extends JPanel {
 
 							theInstance.hasMoved = true;
 
-							// int index = theInstance.getCurrentPlayerIndex();
-							// index++;
-							// theInstance.setCurrentPlayerIndex(index);
-
 							theInstance.repaint();
 						}
 
 					}
 				}
+				//The user will not move if they have clicked an incorrect cell. Thus if the user has not moved, a JDialog box displays an error
 				if (!hasMoved) {
 					errorMessage message = new errorMessage();
 				}
 			}
 
+			//Repaints the board after the user's click
 			theInstance.repaint();
-			// theInstance.hasMoved = false;
-		}
 
+		}
+		
+		// The following Overriden methods are unneeded and therefore have been kept empty
 		@Override
 		public void mousePressed(MouseEvent e) {
-			// TODO Auto-generated method stub
-
 		}
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			// TODO Auto-generated method stub
-
 		}
 
 		@Override
 		public void mouseEntered(MouseEvent e) {
-			// TODO Auto-generated method stub
-
 		}
 
 		@Override
 		public void mouseExited(MouseEvent e) {
-			// TODO Auto-generated method stub
-
 		}
 
+		//This class creates an "error" message when the user clicks the wrong BoardCell
 		public class errorMessage extends JDialog {
 			public errorMessage() {
 

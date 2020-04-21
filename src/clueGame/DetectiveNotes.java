@@ -18,6 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
+//This class creates a JDialog box to be displayed when called by the user. It aids the user in keeping track of the game.
 class DetectiveNotes extends JDialog {
 	//ArrayLists of cards to be used throughout class
 	private ArrayList<String> peopleList = new ArrayList<String>();

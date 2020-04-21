@@ -53,34 +53,34 @@ public class gameSetupTests {
 		//Tests that the people loaded correctly
 		assertEquals(people[0].getPlayerName(), "Mrs. White");
 		assertEquals(people[1].getPlayerName(), "Mr. Green");
-		assertEquals(people[2].getPlayerName(), "Mrs. Peacock");
+		assertEquals(people[5].getPlayerName(), "Mrs. Peacock");
 		assertEquals(people[3].getPlayerName(), "Professor Plum");
 		assertEquals(people[4].getPlayerName(), "Miss Scarlett");
-		assertEquals(people[5].getPlayerName(), "Colonel Mustard");
+		assertEquals(people[2].getPlayerName(), "Colonel Mustard");
 		
 		//Tests that the colors loaded correctly
 		assertEquals(people[0].getColor(), Color.white);
 		assertEquals(people[1].getColor(), Color.green);
-		assertEquals(people[2].getColor(), Color.blue);
+		assertEquals(people[5].getColor(), Color.blue);
 		assertEquals(people[3].getColor(), Color.magenta);
 		assertEquals(people[4].getColor(), Color.red);
-		assertEquals(people[5].getColor(), Color.yellow);
+		assertEquals(people[2].getColor(), Color.orange);
 		
 		//Tests that the row coordinates loaded correctly
 		assertEquals(people[0].getRow(), 24);
 		assertEquals(people[1].getRow(), 24);
-		assertEquals(people[2].getRow(), 15);
+		assertEquals(people[5].getRow(), 15);
 		assertEquals(people[3].getRow(), 0);
 		assertEquals(people[4].getRow(), 0);
-		assertEquals(people[5].getRow(), 18);
+		assertEquals(people[2].getRow(), 18);
 		
 		//Tests that the column coordinates loaded correctly
 		assertEquals(people[0].getColumn(), 6);
 		assertEquals(people[1].getColumn(), 13);
-		assertEquals(people[2].getColumn(), 0);
+		assertEquals(people[5].getColumn(), 0);
 		assertEquals(people[3].getColumn(), 18);
 		assertEquals(people[4].getColumn(), 4);
-		assertEquals(people[5].getColumn(), 24);
+		assertEquals(people[2].getColumn(), 24);
 	
 	}
 	
