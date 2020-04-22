@@ -36,7 +36,7 @@ public class ClueGame extends JFrame{
 	private JTextField currentPlayer;
 	private JTextField roll;
 	private Board board;
-	
+	//private Guess guess = new Guess();
 
 
 	public ClueGame() {
@@ -44,7 +44,6 @@ public class ClueGame extends JFrame{
 		board = Board.getInstance();
 		board.setConfigFiles("layout.csv", "rooms.txt",  "people.txt", "cards.txt");
 		board.initialize();
-
 
 		//Sets dimensions and title for the JFrame
 		setSize(new Dimension (850, 850));
@@ -61,18 +60,11 @@ public class ClueGame extends JFrame{
 		pCards.setPreferredSize(eastSideDim);
 		add(pCards, BorderLayout.EAST);
 		
+		
+		
+
 		//Creates the menu located on the south side of the JFrame
-		JPanel southMenu = new JPanel();
-		southMenu.setLayout(new GridLayout(2,3));
-		WhoseTurn whoseTurn = new WhoseTurn();
-		DieRoll dieRoll = new DieRoll();
-		GuessResponse guessResponse = new GuessResponse();
-		southMenu.add(whoseTurn);
-		southMenu.add(new NextPlayerButton(whoseTurn, dieRoll, guessResponse).getButton());
-		southMenu.add(new AccusationButton().getButton());
-		southMenu.add(dieRoll);
-		southMenu.add(new Guess());
-		southMenu.add(guessResponse);
+		SouthMenu southMenu = new SouthMenu();
 		
 		
 		

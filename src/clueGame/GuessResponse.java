@@ -37,5 +37,9 @@ public class GuessResponse extends JPanel{
 		}
 	}
 	
+	public void clearText() {
+		response.setText("");
+	}
+	
 
 }

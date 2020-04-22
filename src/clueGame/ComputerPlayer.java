@@ -89,7 +89,6 @@ public class ComputerPlayer extends Player {
 		}
 		
 		
-		//System.out.println(newTargets.size() + " " + this.getPlayerName());
 		Collections.shuffle(newTargets);
 		if(newTargets.size() != 0) {
 			return newTargets.get(0);
@@ -142,6 +141,11 @@ public class ComputerPlayer extends Player {
 			stringWeaponSeen.add(i.getCardName());
 		}
 	
+		Collections.shuffle(stringPeopleList);
+		Collections.shuffle(stringPeopleSeen);
+		Collections.shuffle(stringWeaponList);
+		Collections.shuffle(stringWeaponSeen);
+		
 		for (String i : stringPeopleList) {
 			if (!(stringPeopleSeen.contains(i))) {
 				personSuggestion = i;
@@ -163,41 +167,87 @@ public class ComputerPlayer extends Player {
 	}
 	
 	public Solution makeAccusation() {
-		System.out.println("Made Accusation!!!");
-		Set<String>stringPeopleSeen = new HashSet<String>();
-		Set<String>stringRoomsSeen = new HashSet<String>();
-		Set<String>stringWeaponsSeen = new HashSet<String>();
-		String personSuggestion = "";
+Solution output;
+		
+		Map<Character, String> legend = gameBoard.getLegend();
 		String roomSuggestion = "";
+		String personSuggestion = "";
 		String weaponSuggestion = "";
 		
-		for (Card i : this.peopleList) {
+		for (Card i : this.getHand()) {
+			if(i.getType() == CardType.PERSON) {
+				peopleSeen.add(i);
+			}
+			if(i.getType() == CardType.WEAPON) {
+				weaponsSeen.add(i);
+			}
+			if(i.getType() == CardType.ROOM) {
+				roomsSeen.add(i);
+			}
+		}
+		
+		
+		Collections.shuffle(this.peopleList);
+		Collections.shuffle(this.weaponList);
+		Collections.shuffle(this.roomList);
+		
+		ArrayList<String>stringPeopleList = new ArrayList<String>();
+		for (Card i : peopleList) {
+			stringPeopleList.add(i.getCardName());
+		}
+		ArrayList<String>stringPeopleSeen = new ArrayList<String>();
+		for (Card i : peopleSeen) {
 			stringPeopleSeen.add(i.getCardName());
 		}
-		for (Card i : this.weaponList) {
-			stringWeaponsSeen.add(i.getCardName());
+		
+		ArrayList<String>stringWeaponList = new ArrayList<String>();
+		for (Card i : weaponList) {
+			stringWeaponList.add(i.getCardName());
 		}
-		for (Card i : this.roomList) {
+		ArrayList<String>stringWeaponSeen = new ArrayList<String>();
+		for (Card i : weaponsSeen) {
+			stringWeaponSeen.add(i.getCardName());
+		}
+		ArrayList<String>stringRoomsList = new ArrayList<String>();
+		for (Card i : roomList) {
+			stringRoomsList.add(i.getCardName());
+		}
+		ArrayList<String>stringRoomsSeen = new ArrayList<String>();
+		for (Card i : roomsSeen) {
 			stringRoomsSeen.add(i.getCardName());
 		}
 		
-		for (Card i : this.peopleSeen) {
-			if (!stringPeopleSeen.contains(i.getCardName())) {
-				personSuggestion = i.getCardName();
-			}
-		}
-		for (Card i : this.weaponsSeen) {
-			if (!stringWeaponsSeen.contains(i.getCardName())) {
-				weaponSuggestion = i.getCardName();
-			}
-		}
-		for (Card i : this.roomsSeen) {
-			if (!stringRoomsSeen.contains(i.getCardName())) {
-				roomSuggestion = i.getCardName();
+		Collections.shuffle(stringPeopleList);
+		Collections.shuffle(stringPeopleSeen);
+		Collections.shuffle(stringWeaponList);
+		Collections.shuffle(stringWeaponSeen);
+		Collections.shuffle(stringRoomsList);
+		Collections.shuffle(stringRoomsSeen);
+		
+		for (String i : stringPeopleList) {
+			if (!(stringPeopleSeen.contains(i))) {
+				personSuggestion = i;
+				break;
 			}
 		}
 		
-		Solution output = new Solution(personSuggestion, roomSuggestion, weaponSuggestion);
+		for (String i : stringWeaponList) {
+			if (!stringWeaponSeen.contains(i)) {
+				weaponSuggestion = i;
+				break;
+			}
+		}
+		
+		for (String i : stringRoomsList) {
+			if (!stringRoomsSeen.contains(i)) {
+				roomSuggestion = i;
+				break;
+			}
+		}
+		
+		output = new Solution(personSuggestion, roomSuggestion, weaponSuggestion);
+		
 		return output;
+		
 	}
 }

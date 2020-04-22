@@ -44,7 +44,32 @@ public class Board extends JPanel {
 	private int currentPlayerIndex = -1;
 	private Boolean hasMoved = false;
 	private Boolean hasPrinted = false;
+	private Boolean accusationClicked = false;
 
+
+
+	public Boolean getAccusationClicked() {
+		return accusationClicked;
+	}
+
+	public void setAccusationClicked(Boolean accusationClicked) {
+		this.accusationClicked = accusationClicked;
+	}
+
+	public Guess guess;
+	private GuessResponse guessResponse;
+
+	public void setGuessResponse(GuessResponse guessResponse) {
+		this.guessResponse = guessResponse;
+	}
+
+	public Guess getGuess() {
+		return guess;
+	}
+
+	public void setGuess(Guess guess) {
+		this.guess = guess;
+	}
 
 	public Boolean getHasMoved() {
 		return hasMoved;
@@ -72,7 +97,6 @@ public class Board extends JPanel {
 			theInstance.loadCardConfig();
 			theInstance.dealCards();
 			theInstance.roll();
-			System.out.println(theInstance.solution.person+ " " + theInstance.solution.room + " " + theInstance.solution.weapon);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -401,13 +425,7 @@ public class Board extends JPanel {
 		for (int i = 0; i < dealableCards.size(); i++) {
 			theInstance.players[i % players.length].addToHand(dealableCards.get(i));
 		}
-		for (Player player : theInstance.players) {
-			System.out.println(player.getPlayerName());
-			for (Card card : player.getHand()) {
-				System.out.print(card.getCardName()+ " ");
-			}
-			System.out.println();
-		}
+
 
 	}
 
@@ -538,8 +556,7 @@ public class Board extends JPanel {
 			boardcell.drawPlayer(cell, players[i].getColor());
 		}
 
-		// System.out.println(theInstance.hasMoved);
-		if (!theInstance.hasMoved) {
+		if (!theInstance.hasMoved && !theInstance.accusationClicked) {
 			if (theInstance.currentPlayerIndex > -1
 					&& theInstance.players[theInstance.currentPlayerIndex].getType().equals(PlayerType.HUMAN)
 					&& theInstance.roll != 0) {
@@ -567,8 +584,8 @@ public class Board extends JPanel {
 	}
 
 	public boolean checkAccusation(Solution s) {
-		if (s.person == theInstance.solution.person && s.room == theInstance.solution.room
-				&& s.weapon == theInstance.solution.weapon) {
+		if (s.person.equals(theInstance.solution.person) && s.room.equals(theInstance.solution.room)
+				&& s.weapon.equals(theInstance.solution.weapon)) {
 			return true;
 		} else {
 			return false;
@@ -649,29 +666,41 @@ public class Board extends JPanel {
 		//Controls what happens when the user clicks the mouse
 		@Override
 		public void mouseClicked(MouseEvent e) {
+
 			int x = e.getX();
 			int y = e.getY();
 			BoardCell clickedCell = theInstance.getCellAt((y / 20)%25, (x / 20)%25);
 
 			//Checks to ensure that the current player is a human
-			if (theInstance.getPlayers()[currentPlayerIndex].getType().equals(PlayerType.HUMAN)) {
-				//Ensures that the user's choice of cells is a correct option
-				for (BoardCell i : targets) {
-					if (clickedCell.equals(i)) {
-						if (!hasMoved) {
-							theInstance.getPlayers()[currentPlayerIndex].setRow(y / 20);
-							theInstance.getPlayers()[currentPlayerIndex].setColumn(x / 20);
+			if (currentPlayerIndex > -1 && theInstance.getPlayers()[currentPlayerIndex].getType().equals(PlayerType.HUMAN)) {
+				if (!theInstance.accusationClicked) {
+					//Ensures that the user's choice of cells is a correct option
+					for (BoardCell i : targets) {
+						if (clickedCell.equals(i)) {
+							if (!hasMoved) {
+								theInstance.getPlayers()[currentPlayerIndex].setRow(y / 20);
+								theInstance.getPlayers()[currentPlayerIndex].setColumn(x / 20);
 
-							theInstance.hasMoved = true;
+								theInstance.hasMoved = true;
 
-							theInstance.repaint();
+								theInstance.repaint();
+								if(theInstance.getCurrentPlayerIndex() != -1 && theInstance.getPlayers()[currentPlayerIndex].getType().equals(PlayerType.HUMAN)) {
+									if(theInstance.getCellAt(theInstance.players[currentPlayerIndex].getRow(), theInstance.players[currentPlayerIndex].getColumn()).isRoom()) {
+										MakeAGuess guessBox = new MakeAGuess(theInstance.guess, theInstance.guessResponse);
+									}
+								}
+
+							}
+
 						}
-
 					}
-				}
-				//The user will not move if they have clicked an incorrect cell. Thus if the user has not moved, a JDialog box displays an error
-				if (!hasMoved) {
-					errorMessage message = new errorMessage();
+					//The user will not move if they have clicked an incorrect cell. Thus if the user has not moved, a JDialog box displays an error
+					if (!hasMoved) {
+						errorMessage message = new errorMessage();
+					}
+					if (theInstance.hasMoved) {
+						theInstance.accusationClicked = true;
+					}
 				}
 			}
 

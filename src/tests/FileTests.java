@@ -44,10 +44,10 @@ public class FileTests {
 		assertEquals("Rec Room", legend.get('R'));
 		assertEquals("Bathroom", legend.get('B'));
 		assertEquals("Family Room", legend.get('F'));
-		assertEquals("Guest room", legend.get('G'));
+		assertEquals("Guest Room", legend.get('G'));
 		assertEquals("Nursery", legend.get('N'));
 		assertEquals("Study", legend.get('S'));
-		assertEquals("Dining room", legend.get('D'));
+		assertEquals("Dining Room", legend.get('D'));
 		assertEquals("Walkway", legend.get('W'));
 	}
 	

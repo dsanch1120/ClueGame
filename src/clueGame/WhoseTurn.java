@@ -30,7 +30,6 @@ public class WhoseTurn extends JPanel{
 	
 	// Allows the JTextField to be updated throughout the program
 	public void updateText() {
-		//System.out.println(board.getCurrentPlayerIndex());
 		if (board.getCurrentPlayerIndex() != -1) {
 			
 			currentPlayer.setText(board.getPlayers()[board.getCurrentPlayerIndex()].getPlayerName());

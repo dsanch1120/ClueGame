@@ -2,10 +2,10 @@ K, Kitchen, Card
 R, Rec Room, Card
 B, Bathroom, Card
 F, Family Room, Card
-G, Guest room, Card
+G, Guest Room, Card
 N, Nursery, Card
 S, Study, Card
-D, Dining room, Card
+D, Dining Room, Card
 L, Lounge, Card
 X, Closet, Other
 W, Walkway, Other

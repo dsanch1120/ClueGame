@@ -7,20 +7,18 @@ package clueGame;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
-//Class to control the window for making a guess
-public class MakeAGuess extends JFrame{
+//Class to control the window when the player clicks the "make accusation" button
+public class MakeAnAccusation extends JFrame {
 	private ArrayList<String> peopleList = new ArrayList<String>();
 	private ArrayList<String> roomList = new ArrayList<String>();
 	private ArrayList<String> weaponList = new ArrayList<String>();
@@ -30,6 +28,7 @@ public class MakeAGuess extends JFrame{
 	private JTextField weaponLabel;
 	private JComboBox<String> personCombo;
 	private JComboBox<String> weaponCombo;
+	private JComboBox<String> roomCombo;
 	private JButton submitButton;
 	private JButton cancelButton;
 	private Board board = Board.getInstance();
@@ -48,19 +47,15 @@ public class MakeAGuess extends JFrame{
 	}
 
 	private String room = "";
-	private Guess guess;
-	private GuessResponse guessResponse;
 
-	public MakeAGuess(Guess guess, GuessResponse guessResponse) {
+	public MakeAnAccusation() {
 		makeLists();
 		setSize(400, 400);
-		this.guess = guess;
-		this.guessResponse = guessResponse;
 		ComboListener listener = new ComboListener();
-		ButtonListener buttonListener = new ButtonListener(this.guess, this.guessResponse);
+		ButtonListener buttonListener = new ButtonListener();
 		setLayout(new GridLayout(4,2));
 		yourRoomLabel = new JTextField(20);
-		yourRoomLabel.setText("Your room: ");
+		yourRoomLabel.setText("Room: ");
 		yourRoomLabel.setEditable(false);
 		yourRoom = new JTextField(20);
 		if (board.getCurrentPlayerIndex() != -1) {
@@ -79,6 +74,8 @@ public class MakeAGuess extends JFrame{
 		personCombo.addActionListener(listener);
 		weaponCombo = new JComboBox<String>();
 		weaponCombo.addActionListener(listener);
+		roomCombo = new JComboBox<String>();
+		roomCombo.addActionListener(listener);
 		submitButton = new JButton("Submit");
 		submitButton.addActionListener(buttonListener);
 		cancelButton = new JButton("Cancel");
@@ -89,9 +86,12 @@ public class MakeAGuess extends JFrame{
 		for (int i = 0; i < weaponList.size(); i++) {
 			weaponCombo.addItem(weaponList.get(i));
 		}
+		for (int i = 0; i < roomList.size(); i++) {
+			roomCombo.addItem(roomList.get(i));
+		}
 
 		add(yourRoomLabel);
-		add(yourRoom);
+		add(roomCombo);
 		add(personLabel);
 		add(personCombo);
 		add(weaponLabel);
@@ -104,14 +104,14 @@ public class MakeAGuess extends JFrame{
 
 
 	}
-	
+
 	public void destroyWindow() {
 		setVisible(false);
 		dispose();
 	}
 
 	private void makeLists() {
-		
+
 		try {
 			File file = new File("data/cards.txt");
 			@SuppressWarnings("resource")
@@ -147,36 +147,33 @@ public class MakeAGuess extends JFrame{
 			if (e.getSource() == weaponCombo) {
 				weapon = weaponCombo.getSelectedItem().toString();
 			}
-			room = board.getLegend().get(board.getCellAt(board.getPlayers()[board.getCurrentPlayerIndex()].getRow(), board.getPlayers()[board.getCurrentPlayerIndex()].getColumn()).getInitial());
+			if (e.getSource() == roomCombo) {
+				room = roomCombo.getSelectedItem().toString();
+			}
 		}
 	}
-	
+
 	private class ButtonListener implements ActionListener {
-		Guess guess;
-		GuessResponse guessResponse;
-		public ButtonListener(Guess guess, GuessResponse guessResponse) {
-			this.guess = guess;
-			this.guessResponse = guessResponse;
-		}
-		
+
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource() == submitButton) {
-				
-				
-				this.guess.updateGuess(person,board.getLegend().get(board.getCellAt(board.getPlayers()[board.getCurrentPlayerIndex()].getRow(), board.getPlayers()[board.getCurrentPlayerIndex()].getColumn()).getInitial()) , weapon);
+
 				Solution solution = new Solution(person, room, weapon);
-				
-				Card card = board.handleSuggestions(solution, board.getCurrentPlayerIndex());
-				this.guessResponse.updateText(card);
+				if (board.checkAccusation(solution)) {
+					JOptionPane.showMessageDialog(submitButton, "You have won the game!");
+					System.exit(0);
+				} else {
+					JOptionPane.showMessageDialog(submitButton, "That is incorrect!");
+				}
 				destroyWindow();
 			}
 			if (e.getSource() == cancelButton) {
 				destroyWindow();
 			}
-			
+
 		}
-		
+
 	}
 
 
