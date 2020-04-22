@@ -103,9 +103,23 @@ public class ComputerPlayer extends Player {
 	public Solution createSuggestion() {
 		Solution output;
 		
-		String roomSuggestion = this.legend.get(board[this.getRow()][this.getColumn()].getInitial());
+		Map<Character, String> legend = gameBoard.getLegend();
+		String roomSuggestion = legend.get(gameBoard.getCellAt(this.getRow(), this.getColumn()).getInitial());
 		String personSuggestion = "";
 		String weaponSuggestion = "";
+		
+		for (Card i : this.getHand()) {
+			if(i.getType() == CardType.PERSON) {
+				peopleSeen.add(i);
+			}
+			if(i.getType() == CardType.WEAPON) {
+				weaponsSeen.add(i);
+			}
+			if(i.getType() == CardType.ROOM) {
+				roomsSeen.add(i);
+			}
+		}
+		
 		
 		Collections.shuffle(this.peopleList);
 		Collections.shuffle(this.weaponList);
@@ -148,5 +162,42 @@ public class ComputerPlayer extends Player {
 		return output;
 	}
 	
-	
+	public Solution makeAccusation() {
+		System.out.println("Made Accusation!!!");
+		Set<String>stringPeopleSeen = new HashSet<String>();
+		Set<String>stringRoomsSeen = new HashSet<String>();
+		Set<String>stringWeaponsSeen = new HashSet<String>();
+		String personSuggestion = "";
+		String roomSuggestion = "";
+		String weaponSuggestion = "";
+		
+		for (Card i : this.peopleList) {
+			stringPeopleSeen.add(i.getCardName());
+		}
+		for (Card i : this.weaponList) {
+			stringWeaponsSeen.add(i.getCardName());
+		}
+		for (Card i : this.roomList) {
+			stringRoomsSeen.add(i.getCardName());
+		}
+		
+		for (Card i : this.peopleSeen) {
+			if (!stringPeopleSeen.contains(i.getCardName())) {
+				personSuggestion = i.getCardName();
+			}
+		}
+		for (Card i : this.weaponsSeen) {
+			if (!stringWeaponsSeen.contains(i.getCardName())) {
+				weaponSuggestion = i.getCardName();
+			}
+		}
+		for (Card i : this.roomsSeen) {
+			if (!stringRoomsSeen.contains(i.getCardName())) {
+				roomSuggestion = i.getCardName();
+			}
+		}
+		
+		Solution output = new Solution(personSuggestion, roomSuggestion, weaponSuggestion);
+		return output;
+	}
 }

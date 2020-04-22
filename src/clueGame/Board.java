@@ -44,8 +44,7 @@ public class Board extends JPanel {
 	private int currentPlayerIndex = -1;
 	private Boolean hasMoved = false;
 	private Boolean hasPrinted = false;
-	private int humanX = 6;
-	private int humanY = 24;
+
 
 	public Boolean getHasMoved() {
 		return hasMoved;
@@ -73,6 +72,7 @@ public class Board extends JPanel {
 			theInstance.loadCardConfig();
 			theInstance.dealCards();
 			theInstance.roll();
+			System.out.println(theInstance.solution.person+ " " + theInstance.solution.room + " " + theInstance.solution.weapon);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -401,6 +401,13 @@ public class Board extends JPanel {
 		for (int i = 0; i < dealableCards.size(); i++) {
 			theInstance.players[i % players.length].addToHand(dealableCards.get(i));
 		}
+		for (Player player : theInstance.players) {
+			System.out.println(player.getPlayerName());
+			for (Card card : player.getHand()) {
+				System.out.print(card.getCardName()+ " ");
+			}
+			System.out.println();
+		}
 
 	}
 
@@ -431,6 +438,19 @@ public class Board extends JPanel {
 				}
 			}
 		}
+
+		if (players[currentPlayerIndex].getType() == PlayerType.COMPUTER) {
+			ComputerPlayer cp = (ComputerPlayer) players[currentPlayerIndex];
+			for (BoardCell i : targets) {
+				if(theInstance.getCellAt(i.getRow(), i.getColumn()).getInitial() == cp.getVisited().getInitial()) {
+					//if(i.getInitial() == theInstance.getCellAt(players[currentPlayerIndex].getRow(), players[currentPlayerIndex].getColumn()).getInitial()){
+					newTargets.remove(i);
+					//}
+				}
+
+			}
+		}
+
 		theInstance.targets = newTargets;
 
 	}
@@ -468,9 +488,14 @@ public class Board extends JPanel {
 		sol.add(suggestion.weapon);
 		sol.add(suggestion.room);
 		// For loop to check every player.
+		int counter = index;
+		if (index == players.length - 1) {
+			index = -1;
+		} 
+
 		for (int i = index + 1; i < players.length; i++) {
 			// If the loop reaches the player who made the accusation, returns null.
-			if (i == index) {
+			if (i == counter) {
 				return null;
 			}
 
@@ -617,7 +642,7 @@ public class Board extends JPanel {
 	public Card[] getCards() {
 		return cards;
 	}
-	
+
 	// Mouse listener class to control what happens when it's the human player's turn.
 	public class Listener implements MouseListener {
 
@@ -626,7 +651,7 @@ public class Board extends JPanel {
 		public void mouseClicked(MouseEvent e) {
 			int x = e.getX();
 			int y = e.getY();
-			BoardCell clickedCell = theInstance.getCellAt(y / 20, x / 20);
+			BoardCell clickedCell = theInstance.getCellAt((y / 20)%25, (x / 20)%25);
 
 			//Checks to ensure that the current player is a human
 			if (theInstance.getPlayers()[currentPlayerIndex].getType().equals(PlayerType.HUMAN)) {
@@ -654,7 +679,7 @@ public class Board extends JPanel {
 			theInstance.repaint();
 
 		}
-		
+
 		// The following Overriden methods are unneeded and therefore have been kept empty
 		@Override
 		public void mousePressed(MouseEvent e) {

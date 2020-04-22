@@ -25,15 +25,17 @@ public class NextPlayerButton extends JPanel{
 	//private Boolean hasBeenClicked = false;
 	private WhoseTurn whoseTurn;
 	private DieRoll dieRoll;
+	private GuessResponse guessResponse;
 	//Boolean variable that determines whether or not it is the first turn.
 	private Boolean firstTurn = true;
 	//Static int to be used throughout the class. Equal to 6, which is the number of players.
 	public static final int playerLength = 6;
 
 	//Constructor for the "Next Player" button
-	public NextPlayerButton(WhoseTurn whoseTurn, DieRoll dieRoll) {
+	public NextPlayerButton(WhoseTurn whoseTurn, DieRoll dieRoll, GuessResponse guessResponse) {
 		this.whoseTurn = whoseTurn;
 		this.dieRoll = dieRoll;
+		this.guessResponse = guessResponse;
 		this.button = new JButton("Next Player");
 		this.button.addActionListener(listener);
 		this.playerCounter = 0;
@@ -61,6 +63,14 @@ public class NextPlayerButton extends JPanel{
 					return;
 				} 
 			}
+			if(board.getCurrentPlayerIndex() != -1 && board.getPlayers()[playerCounter].getType().equals(PlayerType.HUMAN)) {
+				if(board.getCellAt(board.getPlayers()[playerCounter].getRow(), board.getPlayers()[playerCounter].getColumn()).isRoom()) {
+					MakeAGuess guessBox = new MakeAGuess();
+					//guessBox.setVisible(true);
+				}
+			}
+			
+			
 
 			//Increments the player so that the code afterwards is correctly handled.
 			if (board.getCurrentPlayerIndex() != -1) {
@@ -81,7 +91,22 @@ public class NextPlayerButton extends JPanel{
 
 			//If the current player is a computer, the targets are calculated and the player's location is changed.
 			if (board.getCurrentPlayerIndex() != -1 && board.getPlayers()[playerCounter].getType().equals(PlayerType.COMPUTER)) {
+				
 				ComputerPlayer temp = (ComputerPlayer) board.getPlayers()[playerCounter];
+				// 
+				if (temp.getPeopleSeen().size() == 5 && temp.getWeaponsSeen().size() == 5 && temp.getRoomsSeen().size() == 8) {
+					Solution solution = temp.makeAccusation();
+					System.out.println("Making accusation");
+					if (board.checkAccusation(solution)) {
+						winMessage end = new winMessage(temp.getPlayerName(), solution.person, solution.weapon, solution.room);
+						System.exit(0);
+					}
+				}
+				
+				
+				
+				
+				
 				board.calcTargets(board.getPlayers()[playerCounter].getRow(), board.getPlayers()[playerCounter].getColumn(), board.getRoll());
 				BoardCell tempCell = temp.selectTarget(board.getTargets());
 
@@ -89,6 +114,55 @@ public class NextPlayerButton extends JPanel{
 				board.getPlayers()[playerCounter].setColumn(tempCell.getColumn());
 
 				board.setCurrentPlayerIndex(playerCounter);
+				
+				if (board.getCellAt(temp.getRow(), temp.getColumn()).isRoom()) {
+					//System.out.println(temp.getRow() + " " + temp.getColumn());
+					Solution solution = temp.createSuggestion();
+					Card card = board.handleSuggestions(solution, playerCounter);
+					guessResponse.updateText(card);
+					
+					for (Player player : board.getPlayers()) {
+						if(player.getType() == PlayerType.COMPUTER && card != null) {
+							ComputerPlayer cp = (ComputerPlayer) player;
+							switch (card.getType()) {
+							case PERSON:
+								cp.updatePeopleSeen(card);
+								break;
+							case WEAPON:
+								cp.updateWeaponsSeen(card);
+								break;
+							case ROOM:
+								cp.updateRoomsSeen(card);
+								break;
+							default:
+								System.out.println("error");
+							}
+						}
+					}
+					
+					System.out.println(temp.getPlayerName() + " " + solution.person + " " + solution.room + " " + solution.weapon);
+					for (Card i : temp.getPeopleSeen()) {
+						System.out.print(i.getCardName() + " ");
+					}
+					System.out.println(" ");
+					System.out.println(" ");
+					for (Card i : temp.getWeaponsSeen()) {
+						System.out.print(i.getCardName() + " ");
+					}
+					System.out.println(" ");
+					System.out.println(" ");
+					for (Card i : temp.getRoomsSeen()) {
+						System.out.print(i.getCardName() + " ");
+					}
+					System.out.println(" ");
+					System.out.println(" ");
+					System.out.println(" ");
+					System.out.println(" ");
+					
+				}
+				
+				
+				
 			}
 
 			//Repaints the board and modifies boolean for next time this method is called.
@@ -103,6 +177,13 @@ public class NextPlayerButton extends JPanel{
 		public errorMessage() {
 
 			JOptionPane.showMessageDialog(this, "Can't click that yet!");
+		}
+	}
+	
+	public class winMessage extends JDialog {
+		public winMessage(String name, String person, String weapon, String room) {
+
+			JOptionPane.showMessageDialog(this, name + "won the game with the accusation: \n" + person + " in the " + room + " with the " + weapon);
 		}
 	}
 

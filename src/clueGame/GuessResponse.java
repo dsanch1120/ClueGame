@@ -28,12 +28,12 @@ public class GuessResponse extends JPanel{
 	}
 	
 	//Allows the JTextField to be updated throughout the program
-	public void updateText() {
-		if (board.getCurrentPlayerIndex() != -1) {
-			response.setText("no");
+	public void updateText(Card card) {
+		if (card != null) {
+			response.setText(card.getCardName());
 		}
 		else {
-			response.setText("no");
+			response.setText("No new clue");
 		}
 	}
 	
